@@ -1,0 +1,22 @@
+﻿################################################################################
+# This .gitignore file was automatically created by Microsoft(R) Visual Studio.
+################################################################################
+
+/.vs
+/KaashiYatra.API/bin/Debug/net6.0
+/KaashiYatra.API/obj/Debug/net6.0
+/KaashiYatra.API/bin/Release/net6.0
+/KaashiYatra.API/Properties/PublishProfiles
+/KaashiYatra.API/obj/Debug/net6.0/KaashiYatra.API.csproj.AssemblyReference.cache
+/KaashiYatra.API/obj/Release/net6.0/PubTmp/Out
+/KaashiYatra.API/obj/Release/net6.0
+/obj
+/obj/*
+/KaashiYatra.API/.config/dotnet-tools.json
+*.suo
+*.user
+_ReSharper.*
+bin
+obj
+packages
+**/obj/*
