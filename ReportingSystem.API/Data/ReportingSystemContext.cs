@@ -27,6 +27,7 @@ namespace ReportingSystem.API.Data
         }
 
         public DbSet<User> Users { get; set; }
+        public DbSet<PatientReport> PatientReports { get; set; }
 
         public override int SaveChanges()
         {
