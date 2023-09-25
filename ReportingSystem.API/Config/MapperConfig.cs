@@ -19,6 +19,8 @@ namespace ReportingSystem.API.Config
 
             #region User
             CreateMap<User, UserResponse>();
+            CreateMap<PatientReport, PatientReportResponse>();
+            CreateMap<PatientReportRequest, PatientReport>();
             CreateMap<UserRequest, User>()
                 .ForMember(des => des.EmailVerificationCode, src => src.MapFrom(x => Guid.NewGuid().ToString()))
                 .ForMember(des => des.EmailVerificationCodeExpireOn, src => src.MapFrom(x => DateTime.Now.AddHours(24)));

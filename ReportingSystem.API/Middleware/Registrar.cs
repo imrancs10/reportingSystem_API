@@ -17,6 +17,7 @@ namespace ReportingSystem.API.Middleware
         {
             services.AddScoped<ILoginRepository, LoginRepository>()
                 .AddScoped<ILoginService, LoginService>()
+                .AddScoped<IPatientReportService, PatientReportService>()
                 .AddScoped<IMailService, MailService>()
                 .AddScoped<IExcelReader, ExcelReader>()
                 .AddSingleton<IHttpContextAccessor, HttpContextAccessor>();

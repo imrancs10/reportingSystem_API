@@ -77,7 +77,7 @@ builder.Services.AddCors(options =>
     options.AddPolicy(_policyName,
         builder =>
         {
-            builder.SetIsOriginAllowed(isOriginAllowed: _ => true).WithOrigins("http://localhost:3000/", "*")
+            builder.SetIsOriginAllowed(isOriginAllowed: _ => true).WithOrigins("http://localhost:4200/", "*")
                                 .AllowAnyHeader()
                                 .AllowAnyMethod();
         });
@@ -95,9 +95,9 @@ app.UseSwagger();
 app.UseSwaggerUI(options =>
 {
     if (app.Environment.IsDevelopment())
-        options.SwaggerEndpoint("/swagger/V1/swagger.json", "Kashi Yatra Web API");
+        options.SwaggerEndpoint("/swagger/V1/swagger.json", "Reporting System Web API");
     else 
-        options.SwaggerEndpoint("/api/swagger/V1/swagger.json", "Kashi Yatra Web API");
+        options.SwaggerEndpoint("/api/swagger/V1/swagger.json", "Reporting System Web API");
     options.DocExpansion(DocExpansion.None);
 });
 
