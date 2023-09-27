@@ -97,7 +97,7 @@ app.UseSwaggerUI(options =>
     if (app.Environment.IsDevelopment())
         options.SwaggerEndpoint("/swagger/V1/swagger.json", "Reporting System Web API");
     else 
-        options.SwaggerEndpoint("/api/swagger/V1/swagger.json", "Reporting System Web API");
+        options.SwaggerEndpoint("/swagger/V1/swagger.json", "Reporting System Web API");
     options.DocExpansion(DocExpansion.None);
 });
 
