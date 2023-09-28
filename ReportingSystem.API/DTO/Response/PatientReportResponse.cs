@@ -10,8 +10,8 @@ namespace ReportingSystem.API.DTO.Response
         public string? FullName { get; set; }
         public string? uhid { get; set; }
         public string? refby { get; set; }
-        public int? age { get; set; }
-        public int? mobileNo { get; set; }
+        public string? gender { get; set; }
+        public string? mobileNo { get; set; }
         public DateTime? date { get; set; }
         //Lung Field Info
         public string? BronchoVascularMarking { get; set; }

@@ -26,7 +26,7 @@ namespace ReportingSystem.API.DTO.Request
             public string Pneumothorax { get; set; }
             public string PneumothoraxSide { get; set; }
             public string SoftTissue { get; set; }
-            public string age { get; set; }
+            public string gender { get; set; }
             public string cavity { get; set; }
             public string cavityRegion { get; set; }
             public string cavitySide { get; set; }
