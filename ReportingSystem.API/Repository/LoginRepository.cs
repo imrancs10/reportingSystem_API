@@ -42,7 +42,8 @@ namespace ReportingSystem.API.Repository
             try
             {
                 var oldData = await _context.Users
-                                           .Where(x => (x.UserName == request.UserName || x.Email == request.UserName) && x.Password == request.Password)
+                                           .Where(x => (x.UserName == request.UserName || x.Email == request.UserName) && x.Password == request.Password
+                                           && x.Role == request.Role)
                                            .FirstOrDefaultAsync();
                 if (oldData == null)
                 {
