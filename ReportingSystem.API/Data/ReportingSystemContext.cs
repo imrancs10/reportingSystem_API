@@ -55,6 +55,11 @@ namespace ReportingSystem.API.Data
                     string value = _httpContextAccessor.HttpContext?.Request.Headers["userId"].ToString();
                     if (!string.IsNullOrEmpty(value))
                     {
+                        //var userData = Users.FirstOrDefault(x => x.UserName == value && x.Role == valueRole);
+                        //if (userData != null)
+                        //{
+                        //    userId = userData.Id;
+                        //}
                         if (int.TryParse(value, out int newUserId))
                         {
                             userId = newUserId;
@@ -63,12 +68,12 @@ namespace ReportingSystem.API.Data
                 }
                 if (entityEntry.State is EntityState.Added)
                 {
-                    baseModel.CreatedBy = 0;
+                    baseModel.CreatedBy = userId != null ? userId.Value : 0;
                     baseModel.CreatedAt = now;
                 }
                 else
                 {
-                    baseModel.UpdatedBy = 0;
+                    baseModel.UpdatedBy = userId != null ? userId.Value : 0;
                     entityEntry.Property("CreatedAt").IsModified = false;
                     baseModel.UpdatedAt = now;
                 }
