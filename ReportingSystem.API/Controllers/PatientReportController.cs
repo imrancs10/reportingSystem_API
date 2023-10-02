@@ -71,7 +71,7 @@ namespace ReportingSystem.API.Controllers
                 ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
                 PdfWriter writer = new PdfWriter(byteArrayOutputStream);
                 PdfDocument pdfDocument = new PdfDocument(writer);
-                pdfDocument.SetDefaultPageSize(PageSize.A4.Rotate());
+                pdfDocument.SetDefaultPageSize(PageSize.A4);
                 HtmlConverter.ConvertToPdf(stream, pdfDocument);
                 pdfDocument.Close();
                 return File(byteArrayOutputStream.ToArray(), "application/pdf", "Patient_Report.pdf");
@@ -103,14 +103,73 @@ namespace ReportingSystem.API.Controllers
             //var employees = DataStorage.GetAllEmployess();
             //{% static 'images/SNMC.jpg' %}
             var sb = new StringBuilder();
-            sb.AppendFormat(@"<!DOCTYPE html>
+            sb.Append(@"<!DOCTYPE html>
                         <html lang='en'>
                         <head>
                             <title>Chest XRay Report</title>
-                        </head>
-                        <body>
+                        <style>
+                            .mainContainer {
+                            margin: 0px 20px;
+                            }
+                            body {
+                            color: #000000;
+                            background: #ffffff;
+                            font-family: Arial;
+                            }
+                            .hostipaldetails {
+                            text-align: center;
+                            }
+
+                            .hostipaldetails p {
+                            font-size: 17px;
+                            margin: 0px !important;
+                            }
+
+                            .uhidhead p{
+                            padding-bottom: 0px !important;
+                            margin: 0px !important;
+                            }
+
+                            #logo {
+                            padding: 0px 0px 0px 0px;
+                            }
+
+                            #logo img {
+                            width: 70px;
+                            }
+                            .state {
+                            padding-top: 5px;
+                            }
+                            #patientDetails p{
+                            font-size:14px;
+                            padding: 0px !important;
+                            margin: 0px !important;
+                            display: flex;
+                            justify-content: space-between;
+                            }
+                            #results p{
+                            font-size: 13px;
+                            padding: 0px !important;
+                            margin: 0px !important;
+                            }
+                            table {
+	                            width: 100%;
+	                            border-collapse: collapse;
+                            }
+                            th, td {
+	                            font-size: 14px;
+	                            padding: 2px;
+	                            text-align: left;
+                            }
+                            footer{
+	                            float: right;
+	                            text-align: right;
+                            }
+                            </style>
+                        </head>");
+            sb.AppendFormat(@"<body>
                             <div class='mainContainer'>
-                                <table style='width: 100%; border: 1px solid black;'>
+                                <table>
                                     <tr>
                                         <td>
                                             <img src='http://api.imgdotpix.in/Asset/logo.jpg' class='brand-logo' width='70' alt='My image' height='70'>
@@ -166,7 +225,7 @@ namespace ReportingSystem.API.Controllers
                                             <b>{5}</b>
                                         </td>
                                     </tr>
-                                </table>", patientData.FullName, patientData.gender, patientData.uhid, patientData.refby, patientData.age, patientData.date);
+                                </table>", patientData.FullName, patientData.gender, patientData.uhid, patientData.refby, patientData.age, patientData.date.Value.ToLongDateString());
             sb.AppendFormat(@"<hr>
                               <div id='results'>
                                 <p style='text-align: center;'>Investigation Report</p>
