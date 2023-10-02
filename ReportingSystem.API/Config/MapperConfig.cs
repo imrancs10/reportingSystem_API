@@ -24,6 +24,10 @@ namespace ReportingSystem.API.Config
             CreateMap<UserRequest, User>()
                 .ForMember(des => des.EmailVerificationCode, src => src.MapFrom(x => Guid.NewGuid().ToString()))
                 .ForMember(des => des.EmailVerificationCodeExpireOn, src => src.MapFrom(x => DateTime.Now.AddHours(24)));
+
+            CreateMap<OrganizationRequest, Organization>();
+            CreateMap<Organization, OrganizationResponse>();
+            CreateMap<Organization, User>();
             #endregion
 
         }

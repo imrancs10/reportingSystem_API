@@ -8,6 +8,7 @@
         #region Login API
         public const string LoginPath = "user/login";
         public const string LoginUserRegisterPath = "user/register";
+        public const string OrganizationUserRegisterPath = "user/orgregister";
         public const string LoginUserChangePasswordPath = "user/change/password";
         public const string LoginUserResetPasswordPath = "user/reset/password";
         public const string LoginUserUpdateProfilePath = "user/update/profile";

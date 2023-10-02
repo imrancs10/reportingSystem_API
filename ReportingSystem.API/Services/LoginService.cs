@@ -1,6 +1,8 @@
 ﻿using AutoMapper;
+using Microsoft.EntityFrameworkCore;
 using ReportingSystem.API.Common;
 using ReportingSystem.API.Contants;
+using ReportingSystem.API.Data;
 using ReportingSystem.API.Dto.Request;
 using ReportingSystem.API.DTO.Request;
 using ReportingSystem.API.DTO.Response;
@@ -20,12 +22,14 @@ namespace ReportingSystem.API.Services
         private readonly IMapper _mapper;/**/
         private readonly IMailService _mailService;
         private readonly IConfiguration _configuration;
-        public LoginService(ILoginRepository loginRepository, IMapper mapper,IMailService mailService,IConfiguration configuration)
+        private readonly ReportingSystemContext _context;
+        public LoginService(ILoginRepository loginRepository, IMapper mapper, IMailService mailService, IConfiguration configuration, ReportingSystemContext context)
         {
             _loginRepository = loginRepository;
             _mapper = mapper;
             _mailService = mailService;
             _configuration = configuration;
+            _context = context;
         }
 
         public async Task<bool> AssignRole(string email, string role)
@@ -72,23 +76,23 @@ namespace ReportingSystem.API.Services
                 throw new UnauthorizedException();
             }
 
-            response.AccessToken =Utility.Utility .GenerateAccessToken(response.UserResponse.Role);
+            response.AccessToken = Utility.Utility.GenerateAccessToken(response.UserResponse.Role);
             return response;
         }
 
         public async Task<UserResponse> RegisterUser(UserRequest request)
         {
-           
+
             if (await _loginRepository.IsUserExist(request.Email))
                 throw new BusinessRuleViolationException(StaticValues.ErrorType_AlreadyExist, StaticValues.Error_EmailAlreadyRegistered);
 
             User user = _mapper.Map<User>(request);
-            user.IsEmailVerified = _configuration.GetValue<int>("EnableEmailVerification",0)==0;
+            user.IsEmailVerified = _configuration.GetValue<int>("EnableEmailVerification", 0) == 0;
             user.Password = PasswordHasher.GenerateHash(request.Password.DecodeBase64());
             user.EmailVerificationCode = Guid.NewGuid().ToString() + Guid.NewGuid().ToString();
             user.EmailVerificationCodeExpireOn = DateTime.Now.AddHours(48);
-            var res= _mapper.Map<UserResponse>(await _loginRepository.RegisterUser(user));
-            if(res.Id>0)
+            var res = _mapper.Map<UserResponse>(await _loginRepository.RegisterUser(user));
+            if (res.Id > 0)
             {
                 var emailBody = await _mailService.GetMailTemplete(Constants.EmailTemplateEnum.EmailVerification);
 
@@ -98,7 +102,50 @@ namespace ReportingSystem.API.Services
                     Body = emailBody,
                     Subject = "Emai verification | Kashi Yatri"
                 };
-              _mailService.SendEmailAsync(mailRequest);
+                _mailService.SendEmailAsync(mailRequest);
+            }
+            return res;
+        }
+
+        public async Task<OrganizationResponse> OrganizationUserRegister(OrganizationRequest request)
+        {
+
+            if (await _loginRepository.IsUserExist(request.Email))
+                throw new BusinessRuleViolationException(StaticValues.ErrorType_AlreadyExist, StaticValues.Error_EmailAlreadyRegistered);
+
+            var org = _mapper.Map<Organization>(request);
+            //user.IsEmailVerified = _configuration.GetValue<int>("EnableEmailVerification", 0) == 0;
+            //user.Password = PasswordHasher.GenerateHash(request.Password.DecodeBase64());
+            //user.EmailVerificationCode = Guid.NewGuid().ToString() + Guid.NewGuid().ToString();
+            //user.EmailVerificationCodeExpireOn = DateTime.Now.AddHours(48);
+            var entity = _context.Organizations.Add(org);
+            entity.State = EntityState.Added;
+            await _context.SaveChangesAsync();
+            var savdData = entity.Entity;
+            var res = _mapper.Map<OrganizationResponse>(savdData);
+            if (res.Id > 0)
+            {
+                //save entry in user table
+                var user = _mapper.Map<User>(savdData);
+                user.Id = 0;
+                user.UserName = savdData.Email;
+                user.Password = request.Password;
+                user.IsEmailVerified = true;
+                var entity1 = _context.Users.Add(user);
+                entity1.State = EntityState.Added;
+                 await _context.SaveChangesAsync();
+                //var res1 = _mapper.Map<OrganizationResponse>(savdData);
+
+
+                var emailBody = await _mailService.GetMailTemplete(Constants.EmailTemplateEnum.EmailVerification);
+
+                MailRequest mailRequest = new()
+                {
+                    ToEmail = request.Email,
+                    Body = emailBody,
+                    Subject = "Emai verification | Kashi Yatri"
+                };
+                //_mailService.SendEmailAsync(mailRequest);
             }
             return res;
         }
@@ -110,8 +157,8 @@ namespace ReportingSystem.API.Services
 
         public async Task<string> ResetPassword(string userName)
         {
-            var result=await _loginRepository.ResetPassword(userName);
-            if(result)
+            var result = await _loginRepository.ResetPassword(userName);
+            if (result)
             {
 
             }
@@ -120,13 +167,13 @@ namespace ReportingSystem.API.Services
 
         public async Task<bool> UpdateProfile(UserRequest request)
         {
-            User user= _mapper.Map<User>(request);
+            User user = _mapper.Map<User>(request);
             return await _loginRepository.UpdateProfile(user);
         }
 
         public async Task<string> VerifyEmail(string token)
         {
-            var result=await _loginRepository.VerifyEmail(token);
+            var result = await _loginRepository.VerifyEmail(token);
             return result ? ValidationMessage.EmailVerificationSuccess : ValidationMessage.EmailVerificationFail;
         }
     }
