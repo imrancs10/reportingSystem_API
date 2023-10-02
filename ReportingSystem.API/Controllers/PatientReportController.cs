@@ -130,7 +130,7 @@ namespace ReportingSystem.API.Controllers
                                         <td>
                                         </td>
                                         <td>
-                                            Age/Sex
+                                            Gender/Sex
                                         </td>
                                         <td>
                                             <b> {1}</b>
@@ -154,13 +154,19 @@ namespace ReportingSystem.API.Controllers
                                     </tr>
                                     <tr>
                                         <td>
-                                            Date
+                                            Age
                                         </td>
                                         <td>
                                             <b>{4}</b>
                                         </td>
+                                        <td>
+                                            Date
+                                        </td>
+                                        <td>
+                                            <b>{5}</b>
+                                        </td>
                                     </tr>
-                                </table>", patientData.FullName, patientData.gender, patientData.uhid, patientData.refby, patientData.date);
+                                </table>", patientData.FullName, patientData.gender, patientData.uhid, patientData.refby, patientData.age, patientData.date);
             sb.AppendFormat(@"<hr>
                               <div id='results'>
                                 <p style='text-align: center;'>Investigation Report</p>
