@@ -98,7 +98,7 @@ namespace ReportingSystem.API.Services
                     Body = emailBody,
                     Subject = "Emai verification | Kashi Yatri"
                 };
-               // _mailService.SendEmailAsync(mailRequest);
+              _mailService.SendEmailAsync(mailRequest);
             }
             return res;
         }
