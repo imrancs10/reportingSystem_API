@@ -42,7 +42,10 @@
   <ItemGroup>
     <Folder Include="Migrations\" />
     <Folder Include="DownloadReport\" />
-    <Folder Include="wwwroot\" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Include="wwwroot\Asset\logo.jpg" />
   </ItemGroup>
 
 </Project>

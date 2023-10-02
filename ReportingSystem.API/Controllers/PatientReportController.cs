@@ -78,6 +78,8 @@ namespace ReportingSystem.API.Controllers
             }
 
 
+
+
             //string webRootPath = _webHostEnvironment.WebRootPath;
             //string outputFilePath = filePath;
 
@@ -101,41 +103,67 @@ namespace ReportingSystem.API.Controllers
             //var employees = DataStorage.GetAllEmployess();
             //{% static 'images/SNMC.jpg' %}
             var sb = new StringBuilder();
-            sb.Append(@"<div class='mainContainer'>
-                              <div id='logo'>
-                                    <img src='' class='brand-logo' width='70' alt='My image' height='70'>
-                                    <div class='hostipaldetails'>
-                                      <p>S N MEDICAL COLLEGE AGRA</p>
-                                      <p class='state'>Agra, Uttar Pradesh</p>
-                                    </div>
-                              </div>
-                              <table>
-                                <thead>
-                                </thead>
-                                <tbody>
-                                    <tr>");
-            sb.AppendFormat(@"<td>Date: <b>{0}</b></td>
-                                        <td style='text-align: right;'>UHID/Patient ID: <b>{1} </b></td>
-                                    </tr>
-                                </tbody>
-                              </table>", patientData.date, patientData.uhid);
-
-            sb.AppendFormat(@"<hr/>
-                              <table>
-                                <thead>
-                                </thead>
-                                <tbody>
+            sb.AppendFormat(@"<!DOCTYPE html>
+                        <html lang='en'>
+                        <head>
+                            <title>Chest XRay Report</title>
+                        </head>
+                        <body>
+                            <div class='mainContainer'>
+                                <table style='width: 100%; border: 1px solid black;'>
                                     <tr>
-                                        <td>Name:<b> {0} </b></td>
-                                        <td>Age/Sex:<b> {1}</b></td>
-                                        <td>Reff By:<b>{2}</b></td>
+                                        <td>
+                                            <img src='http://api.imgdotpix.in/Asset/logo.jpg' class='brand-logo' width='70' alt='My image' height='70'>
+                                        </td>
+                                        <td style='padding-left:400px;'>
+                                            <p style='margin:1px;'>Department of Radiodiagnosis</p>
+                                            <p style='margin:1px;'>S N MEDICAL COLLEGE</p>
+                                            <p style='margin:1px;' class='state'>Agra, Uttar Pradesh</p>
+                                        </td>
                                     </tr>
-                                </tbody>
-                              </table>", patientData.FullName, patientData.gender, patientData.refby);
+                                </table>
+                                <table style='width: 100%; border: 1px solid black;'>
+                                    <tr>
+                                        <td>Name</td>
+                                        <td><b>{0} </b>
+                                        </td>
+                                        <td>
+                                        </td>
+                                        <td>
+                                            Age/Sex
+                                        </td>
+                                        <td>
+                                            <b> {1}</b>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>
+                                            UHID/Patient ID
+                                        </td>
+                                        <td>
+                                            <b>{2} </b>
+                                        </td>
+                                        <td>
+                                        </td>
+                                        <td>
+                                            Reff By
+                                        </td>
+                                        <td>
+                                            <b> {3}</b>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>
+                                            Date
+                                        </td>
+                                        <td>
+                                            <b>{4}</b>
+                                        </td>
+                                    </tr>
+                                </table>", patientData.FullName, patientData.gender, patientData.uhid, patientData.refby, patientData.date);
             sb.AppendFormat(@"<hr>
                               <div id='results'>
-                                <p style='text-align: center;'>Investigation : X-Ray Chest PA view</p>
-                                <p><b>Results:</b></p>
+                                <p style='text-align: center;'>Investigation Report</p>
                                 <p style='padding: 5px; text-decoration: underline;'><b>Lung Field:</b></p>");
 
 
@@ -224,8 +252,7 @@ namespace ReportingSystem.API.Controllers
                 sb.AppendFormat(@"");
             else if (patientData.BonyCage == "Normal")
                 sb.AppendFormat(@"<p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;The Bony Cage is Normal.</p>");
-
-            if (patientData.Finding == "Crowding of Ribs")
+            else if (patientData.Finding == "Crowding of Ribs")
                 sb.AppendFormat(@" <p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;The Bony Cage of {0} lung is {1}</p>", patientData.BonyCageSide, patientData.Finding);
             else if (patientData.Finding == "Fracture")
                 sb.AppendFormat(@"<p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;The Bony Cage of {0} lung is {1} and Fracture Rib Number is <b>{2}</b>.</p>", patientData.BonyCageSide, patientData.Finding, patientData.FractureRibNumber);
@@ -276,7 +303,18 @@ namespace ReportingSystem.API.Controllers
                         </footer>
 
                       </div>
-                    </div>");
+                    </div> <table style='width: 100%; border: 1px solid black;'>
+                    <tr>
+                        <td colspan='2'>
+                            Authorised Signatory
+                        </td>
+                    </tr>
+                    <tr>
+                        <td colspan='2'>
+                           This Report to be matched clinically, This is not for madico legel perpose 
+                        </td>
+                    </tr>
+                </table>");
 
             return sb.ToString();
         }
