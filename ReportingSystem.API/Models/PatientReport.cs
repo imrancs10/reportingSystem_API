@@ -9,7 +9,7 @@ namespace ReportingSystem.API.Models
         public string? uhid { get; set; }
         public string? refby { get; set; }
         public string? gender { get; set; }
-        public string? mobileNo { get; set; }
+        public long? mobileNo { get; set; }
         public DateTime? date { get; set; }
         //Lung Field Info
         public string? BronchoVascularMarking { get; set; }

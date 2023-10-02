@@ -37,7 +37,7 @@ namespace ReportingSystem.API.DTO.Request
             public string massesRegion { get; set; }
             public string massesSide { get; set; }
             public string mediastinal { get; set; }
-            public string mobileNo { get; set; }
+            public long mobileNo { get; set; }
             public string opacity { get; set; }
             public string opacityRegion { get; set; }
             public string opacitySide { get; set; }
