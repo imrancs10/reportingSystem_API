@@ -11,6 +11,7 @@ namespace ReportingSystem.API.DTO.Response
         public string? uhid { get; set; }
         public string? refby { get; set; }
         public string? gender { get; set; }
+        public string? age { get; set; }
         public long? mobileNo { get; set; }
         public DateTime? date { get; set; }
         //Lung Field Info
