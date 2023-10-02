@@ -6,7 +6,14 @@ namespace ReportingSystem.API.DTO.Response
 {
     public class PatientReportResponse : BaseResponse
     {
-        //Patient Information
+        public int Id { get; set; }
+        public int CreatedBy { get; set; }
+        public int UpdatedBy { get; set; }
+        public int DeletedBy { get; set; }
+        public DateTime CreatedAt { get; set; }
+        public DateTime UpdatedAt { get; set; }
+        public DateTime DeletedAt { get; set; }
+        public bool IsDeleted { get; set; }
         public string? FullName { get; set; }
         public string? uhid { get; set; }
         public string? refby { get; set; }
@@ -54,7 +61,7 @@ namespace ReportingSystem.API.DTO.Response
         public string? Finding { get; set; }
         public string? Bonylesion { get; set; }
         public string? FractureSide { get; set; }
-        public string? FractureRibNumber { get; set; }
+        public int? FractureRibNumber { get; set; }
         public string? SoftTissue { get; set; }
         public string? SoftTissueSide { get; set; }
         public string? SoftTissueAbnormal { get; set; }

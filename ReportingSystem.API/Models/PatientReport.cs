@@ -52,7 +52,7 @@ namespace ReportingSystem.API.Models
         public string? Finding { get; set; }
         public string? Bonylesion { get; set; }
         public string? FractureSide { get; set; }
-        public string? FractureRibNumber { get; set; }
+        public int? FractureRibNumber { get; set; }
         public string? SoftTissue { get; set; }
         public string? SoftTissueSide { get; set; } 
         public string? SoftTissueAbnormal { get; set; }
