@@ -106,10 +106,10 @@ namespace ReportingSystem.API.Controllers
             sb.Append(@"<!DOCTYPE html>
                         <html lang='en'>
                         <head>
-                            <title>Chest XRay Report</title>
+                            <title>Patient Chest XRay Report</title>
                         <style>
                             .mainContainer {
-                            margin: 0px 20px;
+                           margin: 20px 20px;
                             }
                             body {
                             color: #000000;
@@ -138,7 +138,7 @@ namespace ReportingSystem.API.Controllers
                             width: 70px;
                             }
                             .state {
-                            padding-top: 5px;
+                            padding-top: 2px;
                             }
                             #patientDetails p{
                             font-size:14px;
@@ -158,12 +158,12 @@ namespace ReportingSystem.API.Controllers
                             }
                             th, td {
 	                            font-size: 14px;
-	                            padding: 2px;
+	                            padding: 4px;
 	                            text-align: left;
                             }
                             footer{
-	                            float: right;
-	                            text-align: right;
+	                            float: left;
+	                            text-align: left;
                             }
                             </style>
                         </head>");
@@ -171,13 +171,13 @@ namespace ReportingSystem.API.Controllers
                             <div class='mainContainer'>
                                 <table>
                                     <tr>
-                                        <td>
-                                            <img src='http://api.imgdotpix.in/Asset/logo.jpg' class='brand-logo' width='70' alt='My image' height='70'>
+                                        <td style='text-align:right;width: 40%;'>
+                                            <img src='http://api.imgdotpix.in/Asset/logo.jpg' class='brand-logo' width='100px' alt='My image' height='100px'>
                                         </td>
-                                        <td style='padding-left:400px;'>
-                                            <p style='margin:1px;'>Department of Radiodiagnosis</p>
-                                            <p style='margin:1px;'>S N MEDICAL COLLEGE</p>
-                                            <p style='margin:1px;' class='state'>Agra, Uttar Pradesh</p>
+                                         <td style='text-align:left;width: 60%;'>
+                                            <p style='margin:2px;font-size:18px !important; font-style:bold !important'>Department of Radiodiagnosis</p>
+                                            <p style='margin:2px;font-size:16px !important; font-style:bold !important'>S N MEDICAL COLLEGE</p>
+                                            <p style='margin:2px;font-size:15px !important; font-style:bold !important' class='state'>Agra, Uttar Pradesh</p>
                                         </td>
                                     </tr>
                                 </table>
@@ -219,6 +219,8 @@ namespace ReportingSystem.API.Controllers
                                             <b>{4}</b>
                                         </td>
                                         <td>
+                                        </td>
+                                        <td>
                                             Date
                                         </td>
                                         <td>
@@ -226,9 +228,10 @@ namespace ReportingSystem.API.Controllers
                                         </td>
                                     </tr>
                                 </table>", patientData.FullName, patientData.gender, patientData.uhid, patientData.refby, patientData.age, patientData.date.Value.ToLongDateString());
-            sb.AppendFormat(@"<hr>
+            sb.AppendFormat(@"<br>
                               <div id='results'>
-                                <p style='text-align: center;'>Investigation Report</p>
+                                 <p style='margin-bottom: 2px;text-align: center;font-size:18px !important; font-style:bold !important'>Investigation Report</p>
+                                 <hr>
                                 <p style='padding: 5px; text-decoration: underline;'><b>Lung Field:</b></p>");
 
 
@@ -240,12 +243,12 @@ namespace ReportingSystem.API.Controllers
             if (patientData.opacity == "Absent")
                 sb.AppendFormat(@"<p> &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; No Opacity found in either of the lung.</p>");
             else if (patientData.opacity == "Present")
-                sb.AppendFormat(@"<p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;The opacity is <b>{0}</b> in <b>{1} {2} lung.</b></p>", patientData.opacity, patientData.opacitySide, patientData.opacityRegion);
+                sb.AppendFormat(@"<p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;The opacity is <b>{0}</b> in <b>{1} {2} lung.</b></p>", patientData.opacity, patientData.opacitySide, patientData.opacityRegion);
 
             if (patientData.cavity == "Absent")
                 sb.AppendFormat(@"<p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;No cavity found in either of the lung.</p>");
             else if (patientData.cavity == "Present")
-                sb.AppendFormat(@"<p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;The cavity is <b>{0}</b> in <b>{1} {2} lung.</b></p>", patientData.cavity, patientData.cavitySide, patientData.cavityRegion);
+                sb.AppendFormat(@"<p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;The cavity is <b>{0}</b> in <b>{1} {2} lung.</b></p>", patientData.cavity, patientData.cavitySide, patientData.cavityRegion);
 
             if (patientData.masses == "Absent")
                 sb.AppendFormat(@"<p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; No masses found in either of the lung.</p>");
@@ -309,7 +312,7 @@ namespace ReportingSystem.API.Controllers
             if (patientData.Pneumothorax == "Nil")
                 sb.AppendFormat(@"");
             else
-                sb.AppendFormat(@"<p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;The Pneumothorax is <b>{0}</b> in <b>{1}</b> lung.</p>", patientData.Pneumothorax, patientData.PneumothoraxSide);
+                sb.AppendFormat(@"<p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;The Pneumothorax is <b>{0}</b> in <b>{1}</b> lung.</p>", patientData.Pneumothorax, patientData.PneumothoraxSide);
 
             sb.AppendFormat(@"<p style='padding: 5px; text-decoration: underline;'><b>Chest Wall Info:</b></p>");
 
@@ -339,26 +342,26 @@ namespace ReportingSystem.API.Controllers
             if (patientData.BreastShadow == "Nil")
                 sb.AppendFormat(@"");
             else if (patientData.BreastShadow == "Normal")
-                sb.AppendFormat(@"<p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; The Breast Shadow is {0}</p>", patientData.BreastShadow);
+                sb.AppendFormat(@"<p>&nbsp;&nbsp;&nbsp;&nbsp;The Breast Shadow is {0}</p>", patientData.BreastShadow);
             else
                 sb.AppendFormat(@"<p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; The Breast Shadow of <b>{0}</b> side shows <b>{1}</b>.</p>", patientData.BreastShadowSide, patientData.BreastShadowAbnormal);
 
-            sb.AppendFormat(@"<br> <p><b><u>IMPRESSION</u>:</b>&nbsp; X-ray images are suggestive of :-</p>");
+            sb.AppendFormat(@"<p><b><u>IMPRESSION</u>:</b>&nbsp; X-ray images are suggestive of :-</p>");
 
             if (patientData.BronchoVascularMarking == "Prominent" && patientData.opacity == "Present" && patientData.cavity == "Present" && patientData.masses == "Present")
-                sb.AppendFormat(@"<p> - &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <b>Broncho Vascular Markings, opacity, masses and cavity are present and and trachea is {0}</b></p>", patientData.trachea);
+                sb.AppendFormat(@"<p> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <b>Broncho Vascular Markings, opacity, masses and cavity are present and and trachea is {0}</b></p>", patientData.trachea);
             else if (patientData.BronchoVascularMarking == "Normal")
-                sb.AppendFormat(@"<p> - &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Broncho Vascular Marking appears Normal, hilum in {0} lung appears {1} and trachea is {2}.</p>", patientData.hilumSide, patientData.hilum, patientData.trachea);
+                sb.AppendFormat(@"<p> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Broncho Vascular Marking appears Normal, hilum in {0} lung appears {1} and trachea is {2}.</p>", patientData.hilumSide, patientData.hilum, patientData.trachea);
 
             if (patientData.LymphNodes == "Enlarged")
-                sb.AppendFormat(@"<p> - &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Lymph Nodes are {0}</p>", patientData.LymphNodes);
+                sb.AppendFormat(@"<p> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Lymph Nodes are {0}</p>", patientData.LymphNodes);
 
             if (patientData.CardiacSize != "Nil" && patientData.CardiacShape != "Nil")
-                sb.AppendFormat(@"<p> - &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <b>Cardiac size is {0} and Cardiac Shape is {1}</b>.</p>", patientData.CardiacSize, patientData.CardiacShape);
+                sb.AppendFormat(@"<p> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <b>Cardiac size is {0} and Cardiac Shape is {1}</b>.</p>", patientData.CardiacSize, patientData.CardiacShape);
             else if (patientData.CardiacSize != "Nil" && patientData.CardiacShape == "Nil")
-                sb.AppendFormat(@"<p> - &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Cardiac size is {0}</p>", patientData.CardiacSize);
+                sb.AppendFormat(@"<p> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Cardiac size is {0}</p>", patientData.CardiacSize);
 
-            sb.AppendFormat(@"<p>- &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Costophrenic Angles in <b>{0}</b> lung is <b>{1}</b> and Hemi Diaphragm in {2} side appears {3} </p>", patientData.CostophrenicAnglesSide, patientData.CostophrenicAngles, patientData.HemiDiaphragmSide, patientData.HemiDiaphragm);
+            sb.AppendFormat(@"<p> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Costophrenic Angles in <b>{0}</b> lung is <b>{1}</b> and Hemi Diaphragm in {2} side appears {3} </p>", patientData.CostophrenicAnglesSide, patientData.CostophrenicAngles, patientData.HemiDiaphragmSide, patientData.HemiDiaphragm);
 
             sb.Append(@"<br>
                         <p><b>Please correlate clinically</b></p>
@@ -368,14 +371,14 @@ namespace ReportingSystem.API.Controllers
                         </footer>
 
                       </div>
-                    </div> <table style='width: 100%; border: 1px solid black;'>
+                    </div><br><hr> <table style='margin: 10px, 10px; width: 100%;'>
                     <tr>
-                        <td colspan='2'>
+                        <td colspan='2' style='margin-bottom: 2px;text-align: right;'>
                             Authorised Signatory
                         </td>
                     </tr>
                     <tr>
-                        <td colspan='2'>
+                        <td colspan='2' style='margin-bottom: 2px;text-align: right;'>
                            This Report to be matched clinically, This is not for madico legel perpose 
                         </td>
                     </tr>
