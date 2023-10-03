@@ -4,6 +4,7 @@ using ReportingSystem.API.DTO.Response;
 using ReportingSystem.API.Services.IServices;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using System.Formats.Tar;
 
 namespace ReportingSystem.API.Controllers
 {
@@ -28,6 +29,22 @@ namespace ReportingSystem.API.Controllers
         [HttpPost(StaticValues.OrganizationUserRegisterPath)]
         public async Task<OrganizationResponse> OrganizationUserRegister([FromBody] OrganizationRequest request)
         {
+            if (request.LogoBase64.Contains(","))
+            {
+                var basePath = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", "OrganizationLogo");
+                if (!Directory.Exists(basePath))
+                    Directory.CreateDirectory(basePath);
+
+                var filePathName = Path.Combine(basePath, request.Email.Replace("@", "").Replace(".", "") + Path.GetExtension(request.LogoFileName));
+
+                var FileAsBase64 = request.LogoBase64.Substring(request.LogoBase64.IndexOf(",") + 1);
+                var FileAsByteArray = Convert.FromBase64String(FileAsBase64);
+                using (var fs = new FileStream(filePathName, FileMode.CreateNew))
+                {
+                    fs.Write(FileAsByteArray, 0, FileAsByteArray.Length);
+                }
+                request.LogoFileName = request.Email.Replace("@", "").Replace(".", "") + Path.GetExtension(request.LogoFileName);
+            }
             return await _loginService.OrganizationUserRegister(request);
         }
 
@@ -87,7 +104,7 @@ namespace ReportingSystem.API.Controllers
         [HttpPost(StaticValues.UserAssignRolePath)]
         public async Task<bool> AssignRole([FromRoute] string email, [FromRoute] string role)
         {
-            return await _loginService.AssignRole(email,role);
+            return await _loginService.AssignRole(email, role);
         }
 
         [ProducesResponseType(typeof(bool), StatusCodes.Status201Created)]

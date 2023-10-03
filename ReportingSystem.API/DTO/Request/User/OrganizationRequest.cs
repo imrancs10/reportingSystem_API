@@ -14,5 +14,6 @@ namespace ReportingSystem.API.DTO.Request
         public int PinCode { get; set; }
         public string Password { get; set; }
         public string LogoFileName { get; set; }
+        public string LogoBase64 { get; set; }
     }
 }
