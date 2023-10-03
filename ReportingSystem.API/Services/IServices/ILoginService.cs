@@ -7,6 +7,7 @@ namespace ReportingSystem.API.Services.IServices
     public interface ILoginService
     {
         Task<LoginResponse> Login(LoginRequest request);
+        Task<List<OrganizationResponse>> GetOrganizationDetail();
         Task<UserResponse> RegisterUser(UserRequest request);
         Task<OrganizationResponse> OrganizationUserRegister(OrganizationRequest request);
         Task<bool> ChangePassword(PasswordChangeRequest request);

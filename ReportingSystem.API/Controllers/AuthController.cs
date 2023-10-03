@@ -5,6 +5,7 @@ using ReportingSystem.API.Services.IServices;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System.Formats.Tar;
+using ReportingSystem.API.Services;
 
 namespace ReportingSystem.API.Controllers
 {
@@ -23,6 +24,13 @@ namespace ReportingSystem.API.Controllers
         public async Task<LoginResponse> Login([FromBody] LoginRequest loginRequest)
         {
             return await _loginService.Login(loginRequest);
+        }
+
+        [HttpGet]
+        [Route("get/organizationDetail")]
+        public async Task<List<OrganizationResponse>> GetOrganizationDetail()
+        {
+            return await _loginService.GetOrganizationDetail();
         }
 
         [ProducesResponseType(typeof(OrganizationResponse), StatusCodes.Status201Created)]

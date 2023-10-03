@@ -85,7 +85,28 @@ namespace ReportingSystem.API.Services
             response.AccessToken = Utility.Utility.GenerateAccessToken(response.UserResponse.Role);
             return response;
         }
+        public async Task<List<OrganizationResponse>> GetOrganizationDetail()
+        {
+            var result = (from org in _context.Organizations
+                          join user in _context.Users on org.Email equals user.Email
+                          where org.IsDeleted == false
+                          select new OrganizationResponse
+                          {
+                              City = org.City,
+                              Email = org.Email,
+                              FirstName = org.FirstName,
+                              Id = org.Id,
+                              LastName = org.LastName,
+                              Mobile = org.Mobile,
+                              Name = org.Name,
+                              Password = user.Password,
+                              PinCode = org.PinCode,
+                              State = org.State
+                          }).ToList();
 
+            //var res = _mapper.Map<List<OrganizationResponse>>(result);
+            return result;
+        }
         public async Task<UserResponse> RegisterUser(UserRequest request)
         {
 
