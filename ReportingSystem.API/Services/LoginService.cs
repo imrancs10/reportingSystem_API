@@ -75,7 +75,10 @@ namespace ReportingSystem.API.Services
             {
                 throw new UnauthorizedException();
             }
-
+            var fileLogoName = await _context.Organizations
+                                           .Where(x => x.Email == request.UserName)
+                                           .FirstOrDefaultAsync();
+            response.UserResponse.OrgLogoFileName = fileLogoName.LogoFileName;
             response.AccessToken = Utility.Utility.GenerateAccessToken(response.UserResponse.Role);
             return response;
         }
@@ -133,7 +136,7 @@ namespace ReportingSystem.API.Services
                 user.IsEmailVerified = true;
                 var entity1 = _context.Users.Add(user);
                 entity1.State = EntityState.Added;
-                 await _context.SaveChangesAsync();
+                await _context.SaveChangesAsync();
                 //var res1 = _mapper.Map<OrganizationResponse>(savdData);
 
 

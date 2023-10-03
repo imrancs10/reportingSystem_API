@@ -1,6 +1,7 @@
 ﻿using ReportingSystem.API.DTO.Base;
 using ReportingSystem.API.DTO.Response.Image;
 using ReportingSystem.API.Enums;
+using System.Security.Principal;
 
 namespace ReportingSystem.API.DTO.Request
 {
@@ -104,5 +105,6 @@ namespace ReportingSystem.API.DTO.Request
         public string? BreastShadow { get; set; }
         public string? BreastShadowSide { get; set; }
         public string? BreastShadowAbnormal { get; set; }
+        public string? orgLogoName { get; set; }
     }
 }

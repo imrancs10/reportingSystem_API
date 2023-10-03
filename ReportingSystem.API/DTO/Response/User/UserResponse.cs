@@ -15,5 +15,6 @@ namespace ReportingSystem.API.DTO.Response
         public string Role { get; set; }
         public bool IsTcAccepted { get; set; }
         public bool IsEmailVerified { get; set; }
+        public string OrgLogoFileName { get; set; }
     }
 }

@@ -60,7 +60,7 @@ namespace ReportingSystem.API.Controllers
         public async Task<IActionResult> AddPatientReport([FromBody] PatientReportRequest request)
         {
             var patientData = await _patientReportService.AddPatientReport(request);
-            var htmlContent = GetHTMLString(patientData);
+            var htmlContent = GetHTMLString(patientData, request);
             //ChromePdfRenderer renderer = new ChromePdfRenderer();
             //PdfDocument pdf = renderer.RenderHtmlAsPdf(htmlContent);
             //var filePath = Path.Combine(Directory.GetCurrentDirectory(), "DownloadReport", "PatientReport.pdf");
@@ -98,10 +98,17 @@ namespace ReportingSystem.API.Controllers
             //return File(System.IO.File.ReadAllBytes(outputFilePath), "application/pdf", fileInfo.Name);
 
         }
-        private string GetHTMLString(PatientReportResponse patientData)
+        private string GetHTMLString(PatientReportResponse patientData, PatientReportRequest request)
         {
             //var employees = DataStorage.GetAllEmployess();
             //{% static 'images/SNMC.jpg' %}
+            var basePath = System.IO.Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", "OrganizationLogo");
+            var filePathName = System.IO.Path.Combine(basePath, request.orgLogoName);
+            var logoUrl = "http://api.imgdotpix.in/Asset/logo.jpg";
+            if (!string.IsNullOrEmpty(request.orgLogoName))
+            {
+                logoUrl = filePathName;
+            }
             var sb = new StringBuilder();
             sb.Append(@"<!DOCTYPE html>
                         <html lang='en'>
@@ -172,7 +179,7 @@ namespace ReportingSystem.API.Controllers
                                 <table>
                                     <tr>
                                         <td style='text-align:right;width: 40%;'>
-                                            <img src='http://api.imgdotpix.in/Asset/logo.jpg' class='brand-logo' width='100px' alt='My image' height='100px'>
+                                            <img src='{0}' class='brand-logo' width='100px' alt='My image' height='100px'>
                                         </td>
                                          <td style='text-align:left;width: 60%;'>
                                             <p style='margin:2px;font-size:18px !important; font-style:bold !important'>Department of Radiodiagnosis</p>
@@ -180,8 +187,8 @@ namespace ReportingSystem.API.Controllers
                                             <p style='margin:2px;font-size:15px !important; font-style:bold !important' class='state'>Agra, Uttar Pradesh</p>
                                         </td>
                                     </tr>
-                                </table>
-                                <table style='width: 100%; border: 1px solid black;'>
+                                </table>", logoUrl);
+            sb.AppendFormat(@"<table style='width: 100%; border: 1px solid black;'>
                                     <tr>
                                         <td>Name</td>
                                         <td><b>{0} </b>
