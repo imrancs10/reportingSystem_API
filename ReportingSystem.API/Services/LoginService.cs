@@ -80,7 +80,7 @@ namespace ReportingSystem.API.Services
                 var fileLogoName = await _context.Organizations
                                               .Where(x => x.Email == request.UserName)
                                               .FirstOrDefaultAsync();
-                response.UserResponse.OrgLogoFileName = fileLogoName.LogoFileName;
+                response.UserResponse.OrgLogoFileName = fileLogoName != null ? fileLogoName.LogoFileName : "";
             }
             response.AccessToken = Utility.Utility.GenerateAccessToken(response.UserResponse.Role);
             return response;
