@@ -44,12 +44,12 @@ namespace ReportingSystem.API.Services
             if (await _context.SaveChangesAsync() > 0) return _mapper.Map<PatientReportResponse>(entity.Entity);
             return default(PatientReportResponse);
         }
-        //public async Task<List<ReportingSystemResponse>> GetReportingSystem()
-        //{
-        //    var result = await _context.ReportingSystems.Where(x => !x.IsDeleted).OrderByDescending(x => x.UpdatedAt).ToListAsync();
-        //    var res = _mapper.Map<List<ReportingSystemResponse>>(result);
-        //    return res;
-        //}
+        public async Task<List<PatientReportResponse>> GetPatientReport()
+        {
+            var result = await _context.PatientReports.Where(x => !x.IsDeleted).OrderByDescending(x => x.UpdatedAt).ToListAsync();
+            var res = _mapper.Map<List<PatientReportResponse>>(result);
+            return res;
+        }
         #endregion
     }
 }

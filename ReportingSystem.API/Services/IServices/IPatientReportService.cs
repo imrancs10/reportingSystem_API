@@ -9,7 +9,7 @@ namespace ReportingSystem.API.Services.IServices
 {
     public interface IPatientReportService
     {
-        //Task<List<FeedbackResponse>> GetFeedback();
+        Task<List<PatientReportResponse>> GetPatientReport();
         Task<PatientReportResponse> AddPatientReport(PatientReportRequest request);
     }
 }

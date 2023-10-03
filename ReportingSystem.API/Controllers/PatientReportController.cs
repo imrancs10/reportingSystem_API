@@ -37,12 +37,12 @@ namespace ReportingSystem.API.Controllers
         #endregion
 
         #region Public Methods
-        //[HttpGet]
-        //[Route("get/feedback")]
-        //public async Task<List<FeedbackResponse>> GetFeedback()
-        //{
-        //    return await _feedbackService.GetFeedback();
-        //}
+        [HttpGet]
+        [Route("get/patientReport")]
+        public async Task<List<PatientReportResponse>> GetPatientReport()
+        {
+            return await _patientReportService.GetPatientReport();
+        }
         //[HttpGet]
         //[Route("get/dashboardCount")]
         //public async Task<DashboardResponse> GetDashboardCount()

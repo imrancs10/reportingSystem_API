@@ -75,10 +75,13 @@ namespace ReportingSystem.API.Services
             {
                 throw new UnauthorizedException();
             }
-            var fileLogoName = await _context.Organizations
-                                           .Where(x => x.Email == request.UserName)
-                                           .FirstOrDefaultAsync();
-            response.UserResponse.OrgLogoFileName = fileLogoName.LogoFileName;
+            if (response.UserResponse.Role == "User")
+            {
+                var fileLogoName = await _context.Organizations
+                                              .Where(x => x.Email == request.UserName)
+                                              .FirstOrDefaultAsync();
+                response.UserResponse.OrgLogoFileName = fileLogoName.LogoFileName;
+            }
             response.AccessToken = Utility.Utility.GenerateAccessToken(response.UserResponse.Role);
             return response;
         }

@@ -19,7 +19,8 @@ namespace ReportingSystem.API.Config
 
             #region User
             CreateMap<User, UserResponse>();
-            CreateMap<PatientReport, PatientReportResponse>();
+            CreateMap<PatientReport, PatientReportResponse>()
+                 .ForMember(des => des.date, src => src.MapFrom(x => x.date.Value.ToString("dd/MMM/yyyy")));
             CreateMap<PatientReportRequest, PatientReport>();
             CreateMap<UserRequest, User>()
                 .ForMember(des => des.EmailVerificationCode, src => src.MapFrom(x => Guid.NewGuid().ToString()))
