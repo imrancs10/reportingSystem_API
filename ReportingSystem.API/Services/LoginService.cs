@@ -133,7 +133,23 @@ namespace ReportingSystem.API.Services
             }
             return res;
         }
+        public async Task<bool> OrganizationUserEmailSend(OrganizationRequest request)
+        {
+            var userData = await _loginRepository.IsUserExist(request.Email);
+            if (!userData)
+                throw new BusinessRuleViolationException(StaticValues.ErrorType_RecordNotFound, StaticValues.Error_RecordNotFound);
 
+            var emailBody = await _mailService.GetMailTemplete(Constants.EmailTemplateEnum.EmailVerification);
+
+            MailRequest mailRequest = new()
+            {
+                ToEmail = request.Email,
+                Body = emailBody,
+                Subject = "XRay Reporting | Registration Verified"
+            };
+            _mailService.SendEmailAsync(mailRequest);
+            return true;
+        }
         public async Task<OrganizationResponse> OrganizationUserRegister(OrganizationRequest request)
         {
 
@@ -164,15 +180,7 @@ namespace ReportingSystem.API.Services
                 //var res1 = _mapper.Map<OrganizationResponse>(savdData);
 
 
-                var emailBody = await _mailService.GetMailTemplete(Constants.EmailTemplateEnum.EmailVerification);
 
-                MailRequest mailRequest = new()
-                {
-                    ToEmail = request.Email,
-                    Body = emailBody,
-                    Subject = "Emai verification | Kashi Yatri"
-                };
-                //_mailService.SendEmailAsync(mailRequest);
             }
             return res;
         }

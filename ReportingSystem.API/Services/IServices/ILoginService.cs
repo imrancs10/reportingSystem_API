@@ -10,6 +10,7 @@ namespace ReportingSystem.API.Services.IServices
         Task<List<OrganizationResponse>> GetOrganizationDetail();
         Task<UserResponse> RegisterUser(UserRequest request);
         Task<OrganizationResponse> OrganizationUserRegister(OrganizationRequest request);
+        Task<bool> OrganizationUserEmailSend(OrganizationRequest request);
         Task<bool> ChangePassword(PasswordChangeRequest request);
         Task<string> ResetPassword(string userName);
         Task<string> VerifyEmail(string token);

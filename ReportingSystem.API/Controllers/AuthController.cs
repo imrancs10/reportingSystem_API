@@ -34,6 +34,13 @@ namespace ReportingSystem.API.Controllers
         }
 
         [ProducesResponseType(typeof(OrganizationResponse), StatusCodes.Status201Created)]
+        [HttpPost(StaticValues.OrganizationUserEmailSendPath)]
+        public async Task<bool> OrganizationUserEmailSendPath([FromBody] OrganizationRequest request)
+        {
+            return await _loginService.OrganizationUserEmailSend(request);
+        }
+
+        [ProducesResponseType(typeof(OrganizationResponse), StatusCodes.Status201Created)]
         [HttpPost(StaticValues.OrganizationUserRegisterPath)]
         public async Task<OrganizationResponse> OrganizationUserRegister([FromBody] OrganizationRequest request)
         {

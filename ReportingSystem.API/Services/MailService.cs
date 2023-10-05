@@ -37,36 +37,43 @@ namespace ReportingSystem.API.Services
 
         public async Task SendEmailAsync(MailRequest mailRequest)
         {
-            var email = new MimeMessage
+            try
             {
-                Sender = MailboxAddress.Parse(_mailSettings.Mail)
-            };
-
-            email.To.Add(MailboxAddress.Parse(mailRequest.ToEmail));
-            email.Subject = mailRequest.Subject;
-            var builder = new BodyBuilder();
-            if (mailRequest.Attachments != null)
-            {
-                byte[] fileBytes;
-                foreach (var file in mailRequest.Attachments)
+                var email = new MimeMessage
                 {
-                    if (file.Length > 0)
+                    Sender = MailboxAddress.Parse(_mailSettings.Mail)
+                };
+
+                email.To.Add(MailboxAddress.Parse(mailRequest.ToEmail));
+                email.Subject = mailRequest.Subject;
+                var builder = new BodyBuilder();
+                if (mailRequest.Attachments != null)
+                {
+                    byte[] fileBytes;
+                    foreach (var file in mailRequest.Attachments)
                     {
-                        using (var ms = new MemoryStream())
+                        if (file.Length > 0)
                         {
-                            file.CopyTo(ms); fileBytes = ms.ToArray();
+                            using (var ms = new MemoryStream())
+                            {
+                                file.CopyTo(ms); fileBytes = ms.ToArray();
+                            }
+                            builder.Attachments.Add(file.FileName, fileBytes, ContentType.Parse(file.ContentType));
                         }
-                        builder.Attachments.Add(file.FileName, fileBytes, ContentType.Parse(file.ContentType));
                     }
                 }
+                builder.HtmlBody = mailRequest.Body;
+                email.Body = builder.ToMessageBody();
+                using var smtp = new SmtpClient();
+                smtp.Connect(_mailSettings.Host, _mailSettings.Port);
+                smtp.Authenticate(_mailSettings.Mail, _mailSettings.Password);
+                await smtp.SendAsync(email);
+                smtp.Disconnect(true);
             }
-            builder.HtmlBody = mailRequest.Body;
-            email.Body = builder.ToMessageBody();
-            using var smtp = new SmtpClient();
-            smtp.Connect(_mailSettings.Host, _mailSettings.Port, SecureSocketOptions.StartTls);
-            smtp.Authenticate(_mailSettings.Mail, _mailSettings.Password);
-            await smtp.SendAsync(email);
-            smtp.Disconnect(true);
+            catch (Exception ex)
+            {
+
+            }
         }
     }
 }
