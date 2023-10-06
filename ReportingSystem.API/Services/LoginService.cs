@@ -140,6 +140,7 @@ namespace ReportingSystem.API.Services
                 throw new BusinessRuleViolationException(StaticValues.ErrorType_RecordNotFound, StaticValues.Error_RecordNotFound);
 
             var emailBody = await _mailService.GetMailTemplete(Constants.EmailTemplateEnum.EmailVerification);
+            emailBody.Replace("@UserName", request.Email).Replace("@Password", request.Password);
 
             MailRequest mailRequest = new()
             {
