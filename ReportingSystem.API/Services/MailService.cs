@@ -46,59 +46,52 @@ namespace ReportingSystem.API.Services
 
         public async Task SendEmailAsync(MailRequest mailRequest)
         {
-            try
+            using (System.Net.Mail.SmtpClient client = new System.Net.Mail.SmtpClient("smtp.gmail.com"))
             {
-                using (System.Net.Mail.SmtpClient client = new System.Net.Mail.SmtpClient("smtp.gmail.com"))
-                {
-                    client.Port = 587;
-                    client.EnableSsl = true;
-                    client.Credentials = new NetworkCredential(_mailSettings.Mail, _mailSettings.Password);
+                client.Port = 587;
+                client.EnableSsl = true;
+                client.Credentials = new NetworkCredential(_mailSettings.Mail, _mailSettings.Password);
 
-                    MailMessage mail = new MailMessage();
-                    mail.From = new MailAddress(_mailSettings.Mail);
-                    mail.To.Add(mailRequest.ToEmail); // Replace with the recipient's email address
-                    mail.Subject = mailRequest.Subject;
-                    mail.IsBodyHtml = true;
-                    mail.Body = mailRequest.Body;
+                MailMessage mail = new MailMessage();
+                mail.From = new MailAddress(_mailSettings.Mail);
+                mail.To.Add(mailRequest.ToEmail); // Replace with the recipient's email address
+                mail.Subject = mailRequest.Subject;
+                mail.IsBodyHtml = true;
+                mail.Body = mailRequest.Body;
 
-                    client.Send(mail);
-                }
-
-                //var email = new MimeMessage
-                //{
-                //    Sender = MailboxAddress.Parse(_mailSettings.Mail)
-                //};
-
-                //email.To.Add(MailboxAddress.Parse(mailRequest.ToEmail));
-                //email.Subject = mailRequest.Subject;
-                //var builder = new BodyBuilder();
-                //if (mailRequest.Attachments != null)
-                //{
-                //    byte[] fileBytes;
-                //    foreach (var file in mailRequest.Attachments)
-                //    {
-                //        if (file.Length > 0)
-                //        {
-                //            using (var ms = new MemoryStream())
-                //            {
-                //                file.CopyTo(ms); fileBytes = ms.ToArray();
-                //            }
-                //            builder.Attachments.Add(file.FileName, fileBytes, ContentType.Parse(file.ContentType));
-                //        }
-                //    }
-                //}
-                //builder.HtmlBody = mailRequest.Body;
-                //email.Body = builder.ToMessageBody();
-                //using var smtp = new SmtpClient();
-                //smtp.Connect(_mailSettings.Host, _mailSettings.Port);
-                //smtp.Authenticate(_mailSettings.Mail, _mailSettings.Password);
-                //await smtp.SendAsync(email);
-                //smtp.Disconnect(true);
+                client.Send(mail);
             }
-            catch (Exception ex)
-            {
 
-            }
+            //var email = new MimeMessage
+            //{
+            //    Sender = MailboxAddress.Parse(_mailSettings.Mail)
+            //};
+
+            //email.To.Add(MailboxAddress.Parse(mailRequest.ToEmail));
+            //email.Subject = mailRequest.Subject;
+            //var builder = new BodyBuilder();
+            //if (mailRequest.Attachments != null)
+            //{
+            //    byte[] fileBytes;
+            //    foreach (var file in mailRequest.Attachments)
+            //    {
+            //        if (file.Length > 0)
+            //        {
+            //            using (var ms = new MemoryStream())
+            //            {
+            //                file.CopyTo(ms); fileBytes = ms.ToArray();
+            //            }
+            //            builder.Attachments.Add(file.FileName, fileBytes, ContentType.Parse(file.ContentType));
+            //        }
+            //    }
+            //}
+            //builder.HtmlBody = mailRequest.Body;
+            //email.Body = builder.ToMessageBody();
+            //using var smtp = new SmtpClient();
+            //smtp.Connect(_mailSettings.Host, _mailSettings.Port);
+            //smtp.Authenticate(_mailSettings.Mail, _mailSettings.Password);
+            //await smtp.SendAsync(email);
+            //smtp.Disconnect(true);
         }
     }
 }
