@@ -123,6 +123,11 @@ namespace ReportingSystem.API.Repository
             return await _context.Users.Where(x => !x.IsDeleted && x.Email == email).CountAsync() > 0;
         }
 
+        public async Task<User> GetUserDetail(string email)
+        {
+            return await _context.Users.FirstOrDefaultAsync(x => !x.IsDeleted && x.Email == email);
+        }
+
         public async Task<bool> AssignRole(string email, string Role)
         {
             if (email == null)

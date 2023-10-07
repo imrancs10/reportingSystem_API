@@ -127,7 +127,7 @@ namespace ReportingSystem.API.Services
                 {
                     ToEmail = request.Email,
                     Body = emailBody,
-                    Subject = "Emai verification | Kashi Yatri"
+                    Subject = "Emai verification | IMG PIX"
                 };
                 _mailService.SendEmailAsync(mailRequest);
             }
@@ -135,12 +135,12 @@ namespace ReportingSystem.API.Services
         }
         public async Task<bool> OrganizationUserEmailSend(OrganizationRequest request)
         {
-            var userData = await _loginRepository.IsUserExist(request.Email);
-            if (!userData)
+            var userData = await _loginRepository.GetUserDetail(request.Email);
+            if (userData == null)
                 throw new BusinessRuleViolationException(StaticValues.ErrorType_RecordNotFound, StaticValues.Error_RecordNotFound);
 
             var emailBody = await _mailService.GetMailTemplete(Constants.EmailTemplateEnum.EmailVerification);
-            emailBody.Replace("@UserName", request.Email).Replace("@Password", request.Password);
+            emailBody = emailBody.Replace("@UserName", request.Email).Replace("@Password", userData.Password);
 
             MailRequest mailRequest = new()
             {

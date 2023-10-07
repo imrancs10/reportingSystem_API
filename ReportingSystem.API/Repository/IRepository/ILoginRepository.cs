@@ -12,6 +12,7 @@ namespace ReportingSystem.API.Repository.IRepository
         Task<bool> VerifyEmail(string token);
         Task<bool> UpdateProfile(User request);
         Task<bool> IsUserExist(string email);
+        Task<User> GetUserDetail(string email);
         Task<bool> AssignRole(string email,string Role);
         Task<bool> ResetEmailVerificationCode(string email);
         Task<bool> DeleteUser(string email);
