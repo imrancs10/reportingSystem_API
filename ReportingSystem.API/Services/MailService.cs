@@ -25,14 +25,21 @@ namespace ReportingSystem.API.Services
         public async Task<string> GetMailTemplete(EmailTemplateEnum emailTemplateEnum)
         {
             string content = string.Empty;
-            var pathToFile = Directory.GetCurrentDirectory()
-                                 + Path.DirectorySeparatorChar.ToString()
-                                 + "EmailTemplate"
-                                 + Path.DirectorySeparatorChar.ToString()
-                                 + $"{emailTemplateEnum}.html";
-            using (StreamReader SourceReader = File.OpenText(pathToFile))
+            try
             {
-                content = await SourceReader.ReadToEndAsync();
+                var basePath = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", "EmailTemplate", $"{emailTemplateEnum}.html");
+                //var pathToFile = Directory.GetCurrentDirectory()
+                //                     + Path.DirectorySeparatorChar.ToString()
+                //                     + "EmailTemplate"
+                //                     + Path.DirectorySeparatorChar.ToString()
+                //                     + $"{emailTemplateEnum}.html";
+                using (StreamReader SourceReader = File.OpenText(basePath))
+                {
+                    content = await SourceReader.ReadToEndAsync();
+                }
+            }
+            catch (Exception ex)
+            {
             }
             return content;
         }
