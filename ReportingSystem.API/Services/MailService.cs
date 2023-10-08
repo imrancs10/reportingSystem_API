@@ -49,7 +49,7 @@ namespace ReportingSystem.API.Services
         {
             try
             {
-                using (System.Net.Mail.SmtpClient client = new System.Net.Mail.SmtpClient("smtp.gmail.com"))
+                using (System.Net.Mail.SmtpClient client = new System.Net.Mail.SmtpClient(_mailSettings.Host))
                 {
                     client.Port = 587;
                     client.EnableSsl = true;
