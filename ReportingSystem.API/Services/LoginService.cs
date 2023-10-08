@@ -135,20 +135,28 @@ namespace ReportingSystem.API.Services
         }
         public async Task<bool> OrganizationUserEmailSend(OrganizationRequest request)
         {
-            var userData = await _loginRepository.GetUserDetail(request.Email);
-            if (userData == null)
-                throw new BusinessRuleViolationException(StaticValues.ErrorType_RecordNotFound, StaticValues.Error_RecordNotFound);
-
-            var emailBody = await _mailService.GetMailTemplete(Constants.EmailTemplateEnum.EmailVerification);
-            emailBody = emailBody.Replace("@UserName", request.Email).Replace("@Password", userData.Password);
-
-            MailRequest mailRequest = new()
+            try
             {
-                ToEmail = request.Email,
-                Body = emailBody,
-                Subject = "XRay Reporting | Registration Verified"
-            };
-            _mailService.SendEmailAsync(mailRequest);
+                var userData = await _loginRepository.GetUserDetail(request.Email);
+                if (userData == null)
+                    throw new BusinessRuleViolationException(StaticValues.ErrorType_RecordNotFound, StaticValues.Error_RecordNotFound);
+
+                var emailBody = await _mailService.GetMailTemplete(Constants.EmailTemplateEnum.EmailVerification);
+                emailBody = emailBody.Replace("@UserName", request.Email).Replace("@Password", userData.Password);
+
+                MailRequest mailRequest = new()
+                {
+                    ToEmail = request.Email,
+                    Body = emailBody,
+                    Subject = "XRay Reporting | Registration Verified"
+                };
+                _mailService.SendEmailAsync(mailRequest);
+            }
+            catch (Exception ex)
+            {
+                throw ex.InnerException;
+            }
+          
             return true;
         }
         public async Task<OrganizationResponse> OrganizationUserRegister(OrganizationRequest request)

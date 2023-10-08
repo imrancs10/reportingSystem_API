@@ -11,6 +11,7 @@ using System.IO;
 using System.Net.Mail;
 using System.Net;
 using System.Threading.Tasks;
+using System.Linq.Expressions;
 
 namespace ReportingSystem.API.Services
 {
@@ -46,21 +47,29 @@ namespace ReportingSystem.API.Services
 
         public async Task SendEmailAsync(MailRequest mailRequest)
         {
-            using (System.Net.Mail.SmtpClient client = new System.Net.Mail.SmtpClient("smtp.gmail.com"))
+            try
             {
-                client.Port = 587;
-                client.EnableSsl = true;
-                client.Credentials = new NetworkCredential(_mailSettings.Mail, _mailSettings.Password);
+                using (System.Net.Mail.SmtpClient client = new System.Net.Mail.SmtpClient("smtp.gmail.com"))
+                {
+                    client.Port = 587;
+                    client.EnableSsl = true;
+                    client.Credentials = new NetworkCredential(_mailSettings.Mail, _mailSettings.Password);
 
-                MailMessage mail = new MailMessage();
-                mail.From = new MailAddress(_mailSettings.Mail);
-                mail.To.Add(mailRequest.ToEmail); // Replace with the recipient's email address
-                mail.Subject = mailRequest.Subject;
-                mail.IsBodyHtml = true;
-                mail.Body = mailRequest.Body;
+                    MailMessage mail = new MailMessage();
+                    mail.From = new MailAddress(_mailSettings.Mail);
+                    mail.To.Add(mailRequest.ToEmail); // Replace with the recipient's email address
+                    mail.Subject = mailRequest.Subject;
+                    mail.IsBodyHtml = true;
+                    mail.Body = mailRequest.Body;
 
-                client.Send(mail);
+                    client.Send(mail);
+                }
             }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+            
 
             //var email = new MimeMessage
             //{
