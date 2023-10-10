@@ -49,7 +49,7 @@ namespace ReportingSystem.API.Services
         {
             try
             {
-                using (System.Net.Mail.SmtpClient client = new System.Net.Mail.SmtpClient(_mailSettings.Host))
+                using (System.Net.Mail.SmtpClient client = new System.Net.Mail.SmtpClient("relay-hosting.secureserver.net"))
                 {
                     client.Port = 587;
                     client.EnableSsl = true;
