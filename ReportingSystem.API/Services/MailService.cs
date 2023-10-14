@@ -12,6 +12,7 @@ using System.Net.Mail;
 using System.Net;
 using System.Threading.Tasks;
 using System.Linq.Expressions;
+using DocumentFormat.OpenXml.Wordprocessing;
 
 namespace ReportingSystem.API.Services
 {
@@ -49,21 +50,57 @@ namespace ReportingSystem.API.Services
         {
             try
             {
-                using (System.Net.Mail.SmtpClient client = new System.Net.Mail.SmtpClient("relay-hosting.secureserver.net"))
+                //using (System.Net.Mail.SmtpClient client = new System.Net.Mail.SmtpClient("smtpout.secureserver.net"))
+                //{
+                //    client.Port = 587;
+                //    client.EnableSsl = false;
+                //    client.Credentials = new NetworkCredential(_mailSettings.Mail, _mailSettings.Password);
+
+                //    MailMessage mail = new MailMessage();
+                //    mail.From = new MailAddress(_mailSettings.Mail);
+                //    mail.To.Add(mailRequest.ToEmail); // Replace with the recipient's email address
+                //    mail.Subject = mailRequest.Subject;
+                //    mail.IsBodyHtml = true;
+                //    mail.Body = mailRequest.Body;
+
+                //    client.Send(mail);
+                //}
+                // Create an SMTP client
+                //System.Net.Mail.SmtpClient smtpClient = new System.Net.Mail.SmtpClient("182.50.151.48"); // Replace with your SMTP server
+
+                //// Set SMTP credentials
+                //smtpClient.Credentials = new NetworkCredential(_mailSettings.Mail, _mailSettings.Password); // Replace with your username and password
+
+                //// Enable SSL if required
+                //smtpClient.EnableSsl = true; // Use SSL/TLS if required
+
+                //// Create a MailMessage
+                //MailMessage mail = new MailMessage();
+                //mail.From = new MailAddress(_mailSettings.Mail); // Replace with your Gmail address
+                //mail.To.Add(mailRequest.ToEmail); // Replace with the recipient's email address
+                //mail.Subject = "Test Email";
+                //mail.Body = "This is a test email from C# Web API.";
+
+                //// Send the email
+                //smtpClient.Send(mail);
+
+                var email = new MimeMessage();
+                email.From.Add(MailboxAddress.Parse(_mailSettings.Mail));
+                email.To.Add(MailboxAddress.Parse(mailRequest.ToEmail));
+                email.Subject = mailRequest.Subject;
+
+                var builder = new BodyBuilder
                 {
-                    client.Port = 587;
-                    client.EnableSsl = true;
-                    client.Credentials = new NetworkCredential(_mailSettings.Mail, _mailSettings.Password);
+                    HtmlBody = mailRequest.Body,
+                };
 
-                    MailMessage mail = new MailMessage();
-                    mail.From = new MailAddress(_mailSettings.Mail);
-                    mail.To.Add(mailRequest.ToEmail); // Replace with the recipient's email address
-                    mail.Subject = mailRequest.Subject;
-                    mail.IsBodyHtml = true;
-                    mail.Body = mailRequest.Body;
+                email.Body = builder.ToMessageBody();
 
-                    client.Send(mail);
-                }
+                using var client = new MailKit.Net.Smtp.SmtpClient();
+                client.Connect(_mailSettings.Host, 587, false);
+                client.Authenticate(_mailSettings.Mail, _mailSettings.Password);
+                client.Send(email);
+                client.Disconnect(true);
             }
             catch (Exception ex)
             {

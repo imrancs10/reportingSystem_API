@@ -8,6 +8,8 @@ namespace ReportingSystem.API.Services.IServices
     {
         Task<LoginResponse> Login(LoginRequest request);
         Task<List<OrganizationResponse>> GetOrganizationDetail();
+        Task<OrganizationResponse> GetProfileDetail();
+        Task<UserResponse> ChangePassword(ChangePasswordRequest request);
         Task<UserResponse> RegisterUser(UserRequest request);
         Task<OrganizationResponse> OrganizationUserRegister(OrganizationRequest request);
         Task<bool> OrganizationUserEmailSend(OrganizationRequest request);

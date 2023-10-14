@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using Microsoft.AspNetCore.Http;
 using Microsoft.EntityFrameworkCore;
 using ReportingSystem.API.Common;
 using ReportingSystem.API.Contants;
@@ -23,8 +24,10 @@ namespace ReportingSystem.API.Services
         private readonly IMailService _mailService;
         private readonly IConfiguration _configuration;
         private readonly ReportingSystemContext _context;
-        public LoginService(ILoginRepository loginRepository, IMapper mapper, IMailService mailService, IConfiguration configuration, ReportingSystemContext context)
+        private readonly IHttpContextAccessor _httpContextAccessor;
+        public LoginService(ILoginRepository loginRepository, IMapper mapper, IMailService mailService, IConfiguration configuration, ReportingSystemContext context, IHttpContextAccessor httpContextAccessor)
         {
+            _httpContextAccessor = httpContextAccessor;
             _loginRepository = loginRepository;
             _mapper = mapper;
             _mailService = mailService;
@@ -107,6 +110,82 @@ namespace ReportingSystem.API.Services
 
             //var res = _mapper.Map<List<OrganizationResponse>>(result);
             return result;
+        }
+        public async Task<OrganizationResponse> GetProfileDetail()
+        {
+            int? userId = null;
+            if ((bool)_httpContextAccessor.HttpContext?.Request.Headers.ContainsKey("userId"))
+            {
+                string value = _httpContextAccessor.HttpContext?.Request.Headers["userId"].ToString();
+                if (!string.IsNullOrEmpty(value))
+                {
+                    if (int.TryParse(value, out int newUserId))
+                    {
+                        userId = newUserId;
+                    }
+                }
+            }
+            if (userId != null)
+            {
+                var result = (from org in _context.Organizations
+                              join user in _context.Users on org.Email equals user.Email
+                              where org.IsDeleted == false && user.Id == userId
+                              select new OrganizationResponse
+                              {
+                                  City = org.City,
+                                  Email = org.Email,
+                                  FirstName = org.FirstName,
+                                  Id = org.Id,
+                                  LastName = org.LastName,
+                                  Mobile = org.Mobile,
+                                  Name = org.Name,
+                                  Password = user.Password,
+                                  PinCode = org.PinCode,
+                                  State = org.State
+                              }).FirstOrDefault();
+            }
+            return new OrganizationResponse();
+        }
+
+        public async Task<UserResponse> ChangePassword(ChangePasswordRequest request)
+        {
+            int? userId = null;
+            if ((bool)_httpContextAccessor.HttpContext?.Request.Headers.ContainsKey("userId"))
+            {
+                string value = _httpContextAccessor.HttpContext?.Request.Headers["userId"].ToString();
+                if (!string.IsNullOrEmpty(value))
+                {
+                    if (int.TryParse(value, out int newUserId))
+                    {
+                        userId = newUserId;
+                    }
+                }
+            }
+            if (userId != null)
+            {
+                var result = (from org in _context.Organizations
+                              join user in _context.Users on org.Email equals user.Email
+                              where org.IsDeleted == false && user.Id == userId && user.Password == request.OldPassword
+                              select user).FirstOrDefault();
+                if (result == null)
+                {
+                    throw new BusinessRuleViolationException(StaticValues.ErrorType_InvalidCredentials, StaticValues.Error_InvalidOldPassword);
+                }
+                else if (result.IsDeleted)
+                {
+                    throw new BusinessRuleViolationException(StaticValues.ErrorType_UserNotFound, StaticValues.Error_UserNotFound);
+                }
+                if (result != null)
+                {
+                    result.Password = request.NewPassword;
+                    var entity = _context.Attach(result);
+                    entity.State = EntityState.Modified;
+                    await _context.SaveChangesAsync();
+                }
+                var userResponse = _mapper.Map<UserResponse>(result);
+                return userResponse;
+            }
+            return new UserResponse();
         }
         public async Task<UserResponse> RegisterUser(UserRequest request)
         {

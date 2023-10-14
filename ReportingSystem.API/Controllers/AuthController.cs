@@ -33,6 +33,20 @@ namespace ReportingSystem.API.Controllers
             return await _loginService.GetOrganizationDetail();
         }
 
+        [HttpGet]
+        [Route("get/profile")]
+        public async Task<OrganizationResponse> GetProfileDetail()
+        {
+            return await _loginService.GetProfileDetail();
+        }
+
+        [ProducesResponseType(typeof(OrganizationResponse), StatusCodes.Status201Created)]
+        [HttpPost(StaticValues.OrganizationChangePasswordPath)]
+        public async Task<UserResponse> OrganizationChangePassword([FromBody] ChangePasswordRequest request)
+        {
+            return await _loginService.ChangePassword(request);
+        }
+
         [ProducesResponseType(typeof(OrganizationResponse), StatusCodes.Status201Created)]
         [HttpPost(StaticValues.OrganizationUserEmailSendPath)]
         public async Task<bool> OrganizationUserEmailSendPath([FromBody] OrganizationRequest request)
@@ -69,6 +83,7 @@ namespace ReportingSystem.API.Controllers
 
         [ProducesResponseType(typeof(UserResponse), StatusCodes.Status201Created)]
         [HttpPut(StaticValues.LoginUserRegisterPath)]
+        [NonAction]
         public async Task<UserResponse> RegisterUser([FromBody] UserRequest request)
         {
             return await _loginService.RegisterUser(request);
@@ -77,6 +92,7 @@ namespace ReportingSystem.API.Controllers
         [Authorize]
         [ProducesResponseType(typeof(bool), StatusCodes.Status201Created)]
         [HttpPost(StaticValues.LoginUserChangePasswordPath)]
+        [NonAction]
         public async Task<bool> ChangePassword([FromBody] PasswordChangeRequest request)
         {
             return await _loginService.ChangePassword(request);
@@ -84,6 +100,7 @@ namespace ReportingSystem.API.Controllers
 
         [ProducesResponseType(typeof(string), StatusCodes.Status201Created)]
         [HttpGet(StaticValues.LoginUserVerifyEmailPath)]
+        [NonAction]
         public async Task<string> VerifyEmail([FromRoute] string token)
         {
             return await _loginService.VerifyEmail(token);
@@ -91,6 +108,7 @@ namespace ReportingSystem.API.Controllers
 
         [ProducesResponseType(typeof(string), StatusCodes.Status201Created)]
         [HttpGet(StaticValues.LoginUserResetPasswordPath)]
+        [NonAction]
         public async Task<string> ResetPassword([FromHeader] string userName)
         {
             return await _loginService.ResetPassword(userName);
@@ -99,12 +117,14 @@ namespace ReportingSystem.API.Controllers
         [Authorize]
         [ProducesResponseType(typeof(bool), StatusCodes.Status201Created)]
         [HttpPost(StaticValues.LoginUserUpdateProfilePath)]
+        [NonAction]
         public async Task<bool> UpdateProfile([FromBody] UserRequest request)
         {
             return await _loginService.UpdateProfile(request);
         }
 
         [HttpPost(StaticValues.LoginUserDeleteProfilePath)]
+        [NonAction]
         public async Task<bool> DeleteUser([FromRoute] string email)
         {
             return await _loginService.DeleteUser(email);
@@ -113,6 +133,7 @@ namespace ReportingSystem.API.Controllers
         [Authorize]
         [ProducesResponseType(typeof(bool), StatusCodes.Status201Created)]
         [HttpPost(StaticValues.UserBlockPath)]
+        [NonAction]
         public async Task<bool> BlockUser([FromRoute] string email)
         {
             return await _loginService.BlockUser(email);
@@ -121,6 +142,7 @@ namespace ReportingSystem.API.Controllers
         [Authorize]
         [ProducesResponseType(typeof(bool), StatusCodes.Status201Created)]
         [HttpPost(StaticValues.UserAssignRolePath)]
+        [NonAction]
         public async Task<bool> AssignRole([FromRoute] string email, [FromRoute] string role)
         {
             return await _loginService.AssignRole(email, role);
@@ -128,6 +150,7 @@ namespace ReportingSystem.API.Controllers
 
         [ProducesResponseType(typeof(bool), StatusCodes.Status201Created)]
         [HttpPost(StaticValues.UserResetEmailVerifyCodePath)]
+        [NonAction]
         public async Task<bool> ResetEmailVerificationCode([FromRoute] string email)
         {
             return await _loginService.ResetEmailVerificationCode(email);

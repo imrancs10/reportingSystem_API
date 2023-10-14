@@ -9,6 +9,7 @@
         public const string LoginPath = "user/login";
         public const string LoginUserRegisterPath = "user/register";
         public const string OrganizationUserRegisterPath = "user/orgregister";
+        public const string OrganizationChangePasswordPath = "user/changePassword";
         public const string OrganizationUserEmailSendPath = "user/sendEmail";
         public const string LoginUserChangePasswordPath = "user/change/password";
         public const string LoginUserResetPasswordPath = "user/reset/password";
