@@ -59,6 +59,27 @@ namespace ReportingSystem.API.Controllers
         [Route("add/ReportingSystem")]
         public async Task<IActionResult> AddPatientReport([FromBody] PatientReportRequest request)
         {
+            if (request.XRayReportBase64.Contains(","))
+            {
+                var basePath = System.IO.Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", "XRayReport");
+                if (!Directory.Exists(basePath))
+                    Directory.CreateDirectory(basePath);
+
+                var filePathName = System.IO.Path.Combine(basePath, request.uhid + System.IO.Path.GetExtension(request.XRayReportFileName));
+
+                var FileAsBase64 = request.XRayReportBase64.Substring(request.XRayReportBase64.IndexOf(",") + 1);
+                var FileAsByteArray = Convert.FromBase64String(FileAsBase64);
+                // If file found, delete it
+                if (System.IO.File.Exists(System.IO.Path.Combine(basePath, request.uhid + System.IO.Path.GetExtension(request.XRayReportFileName))))
+                    System.IO.File.Delete(System.IO.Path.Combine(basePath, request.uhid + System.IO.Path.GetExtension(request.XRayReportFileName)));
+
+                using (var fs = new FileStream(filePathName, FileMode.CreateNew))
+                {
+                    fs.Write(FileAsByteArray, 0, FileAsByteArray.Length);
+                }
+                request.XRayReportFileName = request.uhid + System.IO.Path.GetExtension(request.XRayReportFileName);
+            }
+
             var patientData = await _patientReportService.AddPatientReport(request);
             var htmlContent = GetHTMLString(patientData, request);
             //ChromePdfRenderer renderer = new ChromePdfRenderer();

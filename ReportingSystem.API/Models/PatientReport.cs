@@ -62,5 +62,6 @@ namespace ReportingSystem.API.Models
         public string? BreastShadow { get; set; }
         public string? BreastShadowSide { get; set; }
         public string? BreastShadowAbnormal { get; set; }
+        public string XRayFileName { get; set; }
     }
 }

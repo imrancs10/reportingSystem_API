@@ -39,6 +39,7 @@ namespace ReportingSystem.API.Services
         public async Task<PatientReportResponse> AddPatientReport(PatientReportRequest request)
         {
             PatientReport masterData = _mapper.Map<PatientReport>(request);
+            masterData.XRayFileName = request.XRayReportFileName;
             var entity = _context.PatientReports.Add(masterData);
             entity.State = EntityState.Added;
             if (await _context.SaveChangesAsync() > 0) return _mapper.Map<PatientReportResponse>(entity.Entity);
