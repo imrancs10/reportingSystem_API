@@ -97,7 +97,8 @@ namespace ReportingSystem.API.Services
                 email.Body = builder.ToMessageBody();
 
                 using var client = new MailKit.Net.Smtp.SmtpClient();
-                client.Connect(_mailSettings.Host, 587, false);
+                //client.Connect(_mailSettings.GmailHost, _mailSettings.GmailPort, false);
+                client.Connect(_mailSettings.GoDaddyHost, _mailSettings.GoDaddyPort, false);
                 client.Authenticate(_mailSettings.Mail, _mailSettings.Password);
                 client.Send(email);
                 client.Disconnect(true);
@@ -106,7 +107,7 @@ namespace ReportingSystem.API.Services
             {
                 throw ex;
             }
-            
+
 
             //var email = new MimeMessage
             //{
