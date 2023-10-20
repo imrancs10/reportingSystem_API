@@ -66,7 +66,7 @@ namespace ReportingSystem.API.Controllers
                     Directory.CreateDirectory(basePath);
 
                 var filePathName = System.IO.Path.Combine(basePath, request.uhid + System.IO.Path.GetExtension(request.XRayReportFileName));
-
+                var jpegFilePathName = System.IO.Path.Combine(basePath, request.uhid + ".JPEG");
                 var FileAsBase64 = request.XRayReportBase64.Substring(request.XRayReportBase64.IndexOf(",") + 1);
                 var FileAsByteArray = Convert.FromBase64String(FileAsBase64);
                 // If file found, delete it
@@ -77,7 +77,17 @@ namespace ReportingSystem.API.Controllers
                 {
                     fs.Write(FileAsByteArray, 0, FileAsByteArray.Length);
                 }
-                request.XRayReportFileName = request.uhid + System.IO.Path.GetExtension(request.XRayReportFileName);
+                request.XRayReportFileName = request.uhid + ".JPEG";// System.IO.Path.GetExtension(request.XRayReportFileName);
+                using (var image = Aspose.Imaging.Image.Load(filePathName))
+                {
+                    // Create an instance of JpegOptions
+                    var exportOptions = new Aspose.Imaging.ImageOptions.JpegOptions();
+
+                    // Save dicom to jpg
+                    image.Save(jpegFilePathName, exportOptions);
+
+                    //File.Delete(filePathName);
+                }
             }
 
             var patientData = await _patientReportService.AddPatientReport(request);
