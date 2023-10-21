@@ -67,6 +67,7 @@ namespace ReportingSystem.API.Controllers
 
                 var filePathName = System.IO.Path.Combine(basePath, request.uhid + System.IO.Path.GetExtension(request.XRayReportFileName));
                 var jpegFilePathName = System.IO.Path.Combine(basePath, request.uhid + ".JPEG");
+
                 var FileAsBase64 = request.XRayReportBase64.Substring(request.XRayReportBase64.IndexOf(",") + 1);
                 var FileAsByteArray = Convert.FromBase64String(FileAsBase64);
                 // If file found, delete it
@@ -77,26 +78,26 @@ namespace ReportingSystem.API.Controllers
                 {
                     fs.Write(FileAsByteArray, 0, FileAsByteArray.Length);
                 }
-                request.XRayReportFileName = request.uhid + ".JPEG";// System.IO.Path.GetExtension(request.XRayReportFileName);
-                using (var image = Aspose.Imaging.Image.Load(filePathName))
+
+                if (System.IO.Path.GetExtension(request.XRayReportFileName).ToLower().Contains("dcm"))
                 {
-                    // Create an instance of JpegOptions
-                    var exportOptions = new Aspose.Imaging.ImageOptions.JpegOptions();
+                    
+                    using (var image = Aspose.Imaging.Image.Load(filePathName))
+                    {
+                        // Create an instance of JpegOptions
+                        var exportOptions = new Aspose.Imaging.ImageOptions.JpegOptions();
 
-                    // Save dicom to jpg
-                    image.Save(jpegFilePathName, exportOptions);
+                        // Save dicom to jpg
+                        image.Save(jpegFilePathName, exportOptions);
 
-                    //File.Delete(filePathName);
+                        
+                    }
+                    System.IO.File.Delete(filePathName);
                 }
             }
-
+            request.XRayReportFileName = request.uhid + ".JPEG";// System.IO.Path.GetExtension(request.XRayReportFileName);
             var patientData = await _patientReportService.AddPatientReport(request);
             var htmlContent = GetHTMLString(patientData, request);
-            //ChromePdfRenderer renderer = new ChromePdfRenderer();
-            //PdfDocument pdf = renderer.RenderHtmlAsPdf(htmlContent);
-            //var filePath = Path.Combine(Directory.GetCurrentDirectory(), "DownloadReport", "PatientReport.pdf");
-            //pdf.SaveAs(filePath);
-
             using (MemoryStream stream = new MemoryStream(Encoding.ASCII.GetBytes(htmlContent)))
             {
                 ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
@@ -107,26 +108,6 @@ namespace ReportingSystem.API.Controllers
                 pdfDocument.Close();
                 return File(byteArrayOutputStream.ToArray(), "application/pdf", "Patient_Report.pdf");
             }
-
-
-
-
-            //string webRootPath = _webHostEnvironment.WebRootPath;
-            //string outputFilePath = filePath;
-
-            //if (!System.IO.File.Exists(outputFilePath))
-            //{
-            //    // Return a 404 Not Found error if the file does not exist
-            //    return NotFound();
-            //}
-
-            //var fileInfo = new System.IO.FileInfo(outputFilePath);
-            //Response.ContentType = "application/pdf";
-            //Response.Headers.Add("Content-Disposition", "attachment;filename=\"" + fileInfo.Name + "\"");
-            //Response.Headers.Add("Content-Length", fileInfo.Length.ToString());
-
-            //// Send the file to the client
-            //return File(System.IO.File.ReadAllBytes(outputFilePath), "application/pdf", fileInfo.Name);
 
         }
         private string GetHTMLString(PatientReportResponse patientData, PatientReportRequest request)
