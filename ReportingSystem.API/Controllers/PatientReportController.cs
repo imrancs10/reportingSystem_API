@@ -191,7 +191,7 @@ namespace ReportingSystem.API.Controllers
                                 <table>
                                     <tr>
                                         <td style='text-align:right;width: 40%;'>
-                                            <img src='{0}' class='brand-logo' width='100px' alt='My image' height='100px'>
+                                            <img src='{0}' class='brand-logo' width='100px' alt='My image' height='100px' style='width: 60px;height: 60px;float: right;border-radius: 50%!important;'>
                                         </td>
                                          <td style='text-align:left;width: 60%;'>
                                             <p style='margin:2px;font-size:18px !important; font-style:bold !important'>Department of Radiodiagnosis</p>
