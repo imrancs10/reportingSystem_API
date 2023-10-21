@@ -81,7 +81,7 @@ namespace ReportingSystem.API.Controllers
 
                 if (System.IO.Path.GetExtension(request.XRayReportFileName).ToLower().Contains("dcm"))
                 {
-                    
+
                     using (var image = Aspose.Imaging.Image.Load(filePathName))
                     {
                         // Create an instance of JpegOptions
@@ -90,7 +90,7 @@ namespace ReportingSystem.API.Controllers
                         // Save dicom to jpg
                         image.Save(jpegFilePathName, exportOptions);
 
-                        
+
                     }
                     System.IO.File.Delete(filePathName);
                 }
@@ -116,6 +116,7 @@ namespace ReportingSystem.API.Controllers
             //{% static 'images/SNMC.jpg' %}
             var basePath = System.IO.Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", "OrganizationLogo");
             var filePathName = System.IO.Path.Combine(basePath, request.orgLogoName);
+            var orgName = request.orgName;
             var logoUrl = "http://api.imgdotpix.in/Asset/logo.jpg";
             if (!string.IsNullOrEmpty(request.orgLogoName))
             {
@@ -195,11 +196,11 @@ namespace ReportingSystem.API.Controllers
                                         </td>
                                          <td style='text-align:left;width: 60%;'>
                                             <p style='margin:2px;font-size:18px !important; font-style:bold !important'>Department of Radiodiagnosis</p>
-                                            <p style='margin:2px;font-size:16px !important; font-style:bold !important'>S N MEDICAL COLLEGE</p>
+                                            <p style='margin:2px;font-size:16px !important; font-style:bold !important'>{1}</p>
                                             <p style='margin:2px;font-size:15px !important; font-style:bold !important' class='state'>Agra, Uttar Pradesh</p>
                                         </td>
                                     </tr>
-                                </table>", logoUrl);
+                                </table>", logoUrl, orgName);
             sb.AppendFormat(@"<table style='width: 100%; border: 1px solid black;'>
                                     <tr>
                                         <td>Name</td>

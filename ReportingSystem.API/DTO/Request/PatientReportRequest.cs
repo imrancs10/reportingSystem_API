@@ -106,6 +106,7 @@ namespace ReportingSystem.API.DTO.Request
         public string? BreastShadowSide { get; set; }
         public string? BreastShadowAbnormal { get; set; }
         public string? orgLogoName { get; set; }
+        public string? orgName { get; set; }
         public string? XRayReportFileName { get; set; }
         public string? XRayReportBase64 { get; set; }
     }
