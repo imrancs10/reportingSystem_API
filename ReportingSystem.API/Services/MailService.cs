@@ -13,6 +13,7 @@ using System.Net;
 using System.Threading.Tasks;
 using System.Linq.Expressions;
 using DocumentFormat.OpenXml.Wordprocessing;
+using SmtpClient = System.Net.Mail.SmtpClient;
 
 namespace ReportingSystem.API.Services
 {
@@ -50,58 +51,34 @@ namespace ReportingSystem.API.Services
         {
             try
             {
-                //using (System.Net.Mail.SmtpClient client = new System.Net.Mail.SmtpClient("smtpout.secureserver.net"))
+                SmtpClient client = new SmtpClient("relay-hosting.secureserver.net", 25);
+                client.EnableSsl = true;
+                client.UseDefaultCredentials = false;
+                client.Credentials = new NetworkCredential("support@techrefreshsolution.com", "ADMV@12345");
+                MailMessage message = new MailMessage("support@techrefreshsolution.com", mailRequest.ToEmail);
+                message.Subject = mailRequest.Subject;
+                message.Body = mailRequest.Body;
+                message.IsBodyHtml = true;
+                client.Send(message);
+
+                //var email = new MimeMessage();
+                //email.From.Add(MailboxAddress.Parse(_mailSettings.Mail));
+                //email.To.Add(MailboxAddress.Parse(mailRequest.ToEmail));
+                //email.Subject = mailRequest.Subject;
+
+                //var builder = new BodyBuilder
                 //{
-                //    client.Port = 587;
-                //    client.EnableSsl = false;
-                //    client.Credentials = new NetworkCredential(_mailSettings.Mail, _mailSettings.Password);
+                //    HtmlBody = mailRequest.Body,
+                //};
 
-                //    MailMessage mail = new MailMessage();
-                //    mail.From = new MailAddress(_mailSettings.Mail);
-                //    mail.To.Add(mailRequest.ToEmail); // Replace with the recipient's email address
-                //    mail.Subject = mailRequest.Subject;
-                //    mail.IsBodyHtml = true;
-                //    mail.Body = mailRequest.Body;
+                //email.Body = builder.ToMessageBody();
 
-                //    client.Send(mail);
-                //}
-                // Create an SMTP client
-                //System.Net.Mail.SmtpClient smtpClient = new System.Net.Mail.SmtpClient("182.50.151.48"); // Replace with your SMTP server
-
-                //// Set SMTP credentials
-                //smtpClient.Credentials = new NetworkCredential(_mailSettings.Mail, _mailSettings.Password); // Replace with your username and password
-
-                //// Enable SSL if required
-                //smtpClient.EnableSsl = true; // Use SSL/TLS if required
-
-                //// Create a MailMessage
-                //MailMessage mail = new MailMessage();
-                //mail.From = new MailAddress(_mailSettings.Mail); // Replace with your Gmail address
-                //mail.To.Add(mailRequest.ToEmail); // Replace with the recipient's email address
-                //mail.Subject = "Test Email";
-                //mail.Body = "This is a test email from C# Web API.";
-
-                //// Send the email
-                //smtpClient.Send(mail);
-
-                var email = new MimeMessage();
-                email.From.Add(MailboxAddress.Parse(_mailSettings.Mail));
-                email.To.Add(MailboxAddress.Parse(mailRequest.ToEmail));
-                email.Subject = mailRequest.Subject;
-
-                var builder = new BodyBuilder
-                {
-                    HtmlBody = mailRequest.Body,
-                };
-
-                email.Body = builder.ToMessageBody();
-
-                using var client = new MailKit.Net.Smtp.SmtpClient();
-                //client.Connect(_mailSettings.GmailHost, _mailSettings.GmailPort, false);
-                client.Connect(_mailSettings.GoDaddyHost, _mailSettings.GoDaddyPort, false);
-                client.Authenticate(_mailSettings.Mail, _mailSettings.Password);
-                client.Send(email);
-                client.Disconnect(true);
+                //using var client = new MailKit.Net.Smtp.SmtpClient();
+                ////client.Connect(_mailSettings.GmailHost, _mailSettings.GmailPort, false);
+                //client.Connect(_mailSettings.GoDaddyHost, _mailSettings.GoDaddyPort, false);
+                //client.Authenticate(_mailSettings.Mail, _mailSettings.Password);
+                //client.Send(email);
+                //client.Disconnect(true);
             }
             catch (Exception ex)
             {
