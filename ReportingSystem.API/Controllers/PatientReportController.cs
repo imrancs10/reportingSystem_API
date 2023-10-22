@@ -79,7 +79,10 @@ namespace ReportingSystem.API.Controllers
                     fs.Write(FileAsByteArray, 0, FileAsByteArray.Length);
                 }
 
-                if (System.IO.Path.GetExtension(request.XRayReportFileName).ToLower().Contains("dcm"))
+                request.XRayReportFileName = request.uhid + System.IO.Path.GetExtension(request.XRayReportFileName);
+
+                if (System.IO.Path.GetExtension(request.XRayReportFileName).ToLower().Contains("dcm")
+                        || System.IO.Path.GetExtension(request.XRayReportFileName).ToLower().Contains("jpg"))
                 {
 
                     using (var image = Aspose.Imaging.Image.Load(filePathName))
@@ -89,13 +92,13 @@ namespace ReportingSystem.API.Controllers
 
                         // Save dicom to jpg
                         image.Save(jpegFilePathName, exportOptions);
-
-
                     }
                     System.IO.File.Delete(filePathName);
+                    request.XRayReportFileName = request.uhid + ".JPEG";
+                    //}
                 }
             }
-            request.XRayReportFileName = request.uhid + ".JPEG";// System.IO.Path.GetExtension(request.XRayReportFileName);
+            //request.XRayReportFileName = request.uhid + ".JPEG";// System.IO.Path.GetExtension(request.XRayReportFileName);
             var patientData = await _patientReportService.AddPatientReport(request);
             var htmlContent = GetHTMLString(patientData, request);
             using (MemoryStream stream = new MemoryStream(Encoding.ASCII.GetBytes(htmlContent)))
@@ -192,7 +195,7 @@ namespace ReportingSystem.API.Controllers
                                 <table>
                                     <tr>
                                         <td style='text-align:right;width: 40%;'>
-                                            <img src='{0}' class='brand-logo' width='100px' alt='My image' height='100px' style='width: 60px;height: 60px;float: right;border-radius: 50%!important;'>
+                                            <img src='{0}' class='brand-logo' width='100px' alt='My image' height='100px' style='border-radius: 50%!important;'>
                                         </td>
                                          <td style='text-align:left;width: 60%;'>
                                             <p style='margin:2px;font-size:18px !important; font-style:bold !important'>Department of Radiodiagnosis</p>
