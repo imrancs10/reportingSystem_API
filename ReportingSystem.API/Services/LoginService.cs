@@ -143,6 +143,7 @@ namespace ReportingSystem.API.Services
                                   PinCode = org.PinCode,
                                   State = org.State
                               }).FirstOrDefault();
+                return result;
             }
             return new OrganizationResponse();
         }
