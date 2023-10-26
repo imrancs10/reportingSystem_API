@@ -127,6 +127,7 @@ namespace ReportingSystem.API.Services
             }
             if (userId != null)
             {
+                //var basePath = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", "OrganizationLogo");
                 var result = (from org in _context.Organizations
                               join user in _context.Users on org.Email equals user.Email
                               where org.IsDeleted == false && user.Id == userId
@@ -141,7 +142,8 @@ namespace ReportingSystem.API.Services
                                   Name = org.Name,
                                   Password = user.Password,
                                   PinCode = org.PinCode,
-                                  State = org.State
+                                  State = org.State,
+                                  LogoFileName = org.LogoFileName
                               }).FirstOrDefault();
                 return result;
             }
@@ -242,15 +244,10 @@ namespace ReportingSystem.API.Services
         }
         public async Task<OrganizationResponse> OrganizationUserRegister(OrganizationRequest request)
         {
-
             if (await _loginRepository.IsUserExist(request.Email))
                 throw new BusinessRuleViolationException(StaticValues.ErrorType_AlreadyExist, StaticValues.Error_EmailAlreadyRegistered);
 
             var org = _mapper.Map<Organization>(request);
-            //user.IsEmailVerified = _configuration.GetValue<int>("EnableEmailVerification", 0) == 0;
-            //user.Password = PasswordHasher.GenerateHash(request.Password.DecodeBase64());
-            //user.EmailVerificationCode = Guid.NewGuid().ToString() + Guid.NewGuid().ToString();
-            //user.EmailVerificationCodeExpireOn = DateTime.Now.AddHours(48);
             var entity = _context.Organizations.Add(org);
             entity.State = EntityState.Added;
             await _context.SaveChangesAsync();
@@ -267,12 +264,48 @@ namespace ReportingSystem.API.Services
                 var entity1 = _context.Users.Add(user);
                 entity1.State = EntityState.Added;
                 await _context.SaveChangesAsync();
-                //var res1 = _mapper.Map<OrganizationResponse>(savdData);
-
-
-
             }
             return res;
+        }
+
+        public async Task<OrganizationResponse> OrganizationUserProfileUpdate(OrganizationRequest request)
+        {
+            int? userId = null;
+            if ((bool)_httpContextAccessor.HttpContext?.Request.Headers.ContainsKey("userId"))
+            {
+                string value = _httpContextAccessor.HttpContext?.Request.Headers["userId"].ToString();
+                if (!string.IsNullOrEmpty(value))
+                {
+                    if (int.TryParse(value, out int newUserId))
+                    {
+                        userId = newUserId;
+                    }
+                }
+            }
+            if (userId != null)
+            {
+                var org = _mapper.Map<Organization>(request);
+                var entity = _context.Organizations.Update(org);
+                entity.State = EntityState.Modified;
+                await _context.SaveChangesAsync();
+                var savdData = entity.Entity;
+
+                var res = _mapper.Map<OrganizationResponse>(savdData);
+                //if (res.Id > 0)
+                //{
+                //    //save entry in user table
+                //    var user = _mapper.Map<User>(savdData);
+                //    user.Id = userId.Value;
+                //    user.UserName = savdData.Email;
+                //    //user.Password = request.Password;
+                //    user.IsEmailVerified = true;
+                //    var entity1 = _context.Users.Update(user);
+                //    entity1.State = EntityState.Modified;
+                //    await _context.SaveChangesAsync();
+                //}
+                return res;
+            }
+            return null;
         }
 
         public async Task<bool> ResetEmailVerificationCode(string email)

@@ -81,6 +81,33 @@ namespace ReportingSystem.API.Controllers
             return await _loginService.OrganizationUserRegister(request);
         }
 
+        [ProducesResponseType(typeof(OrganizationResponse), StatusCodes.Status201Created)]
+        [HttpPut(StaticValues.OrganizationUserUpdatePath)]
+        public async Task<OrganizationResponse> OrganizationUserProfileUpdate([FromBody] OrganizationRequest request)
+        {
+            if (request.LogoBase64.Contains(","))
+            {
+                var basePath = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", "OrganizationLogo");
+                if (!Directory.Exists(basePath))
+                    Directory.CreateDirectory(basePath);
+
+                var filePathName = Path.Combine(basePath, request.Email.Replace("@", "").Replace(".", "") + Path.GetExtension(request.LogoFileName));
+
+                var FileAsBase64 = request.LogoBase64.Substring(request.LogoBase64.IndexOf(",") + 1);
+                var FileAsByteArray = Convert.FromBase64String(FileAsBase64);
+                // If file found, delete it
+                if (System.IO.File.Exists(Path.Combine(basePath, request.Email.Replace("@", "").Replace(".", "") + Path.GetExtension(request.LogoFileName))))
+                    System.IO.File.Delete(Path.Combine(basePath, request.Email.Replace("@", "").Replace(".", "") + Path.GetExtension(request.LogoFileName)));
+
+                using (var fs = new FileStream(filePathName, FileMode.CreateNew))
+                {
+                    fs.Write(FileAsByteArray, 0, FileAsByteArray.Length);
+                }
+                request.LogoFileName = request.Email.Replace("@", "").Replace(".", "") + Path.GetExtension(request.LogoFileName);
+            }
+            return await _loginService.OrganizationUserProfileUpdate(request);
+        }
+
         [ProducesResponseType(typeof(UserResponse), StatusCodes.Status201Created)]
         [HttpPut(StaticValues.LoginUserRegisterPath)]
         [NonAction]
