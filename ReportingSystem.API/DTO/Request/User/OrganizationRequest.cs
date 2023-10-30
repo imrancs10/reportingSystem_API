@@ -12,7 +12,7 @@ namespace ReportingSystem.API.DTO.Request
         public string State { get; set; }
         public string City { get; set; }
         public int? PinCode { get; set; }
-        public string? Password { get; set; }
+        public string? Password { get; set; } = string.Empty;
         public string? LogoFileName { get; set; }
         public string? LogoBase64 { get; set; }
     }
