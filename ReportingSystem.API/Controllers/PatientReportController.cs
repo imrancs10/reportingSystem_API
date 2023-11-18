@@ -190,7 +190,9 @@ namespace ReportingSystem.API.Controllers
                             }
                             </style>
                         </head>");
-            sb.AppendFormat(@"<body>
+            if (request.showHeader == true)
+            {
+                sb.AppendFormat(@"<body>
                             <div class='mainContainer'>
                                 <table>
                                     <tr>
@@ -204,6 +206,8 @@ namespace ReportingSystem.API.Controllers
                                         </td>
                                     </tr>
                                 </table>", logoUrl, orgName);
+            }
+
             sb.AppendFormat(@"<table style='width: 100%; border: 1px solid black;'>
                                     <tr>
                                         <td>Name</td>

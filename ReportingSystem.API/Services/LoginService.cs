@@ -84,7 +84,9 @@ namespace ReportingSystem.API.Services
                                               .Where(x => x.Email == request.UserName)
                                               .FirstOrDefaultAsync();
                 response.UserResponse.OrgLogoFileName = fileLogoName != null ? fileLogoName.LogoFileName : "";
+                response.UserResponse.ShowHeader = fileLogoName != null ? fileLogoName.ShowHeader : true;
                 response.UserResponse.OrgName = fileLogoName != null ? fileLogoName.Name : "";
+
             }
             response.AccessToken = Utility.Utility.GenerateAccessToken(response.UserResponse.Role);
             return response;

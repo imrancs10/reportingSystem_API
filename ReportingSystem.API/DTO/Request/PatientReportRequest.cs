@@ -109,5 +109,6 @@ namespace ReportingSystem.API.DTO.Request
         public string? orgName { get; set; }
         public string? XRayReportFileName { get; set; }
         public string? XRayReportBase64 { get; set; }
+        public bool? showHeader { get; set; }
     }
 }
