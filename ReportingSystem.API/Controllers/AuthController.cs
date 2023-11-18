@@ -82,6 +82,13 @@ namespace ReportingSystem.API.Controllers
         }
 
         [ProducesResponseType(typeof(OrganizationResponse), StatusCodes.Status201Created)]
+        [HttpPut(StaticValues.OrganizationUsershowHeader)]
+        public async Task<OrganizationResponse> OrganizationUseShowHeader([FromBody] OrganizationRequest request)
+        {
+            return await _loginService.OrganizationUserProfileUpdate(request);
+        }
+
+        [ProducesResponseType(typeof(OrganizationResponse), StatusCodes.Status201Created)]
         [HttpPut(StaticValues.OrganizationUserUpdatePath)]
         public async Task<OrganizationResponse> OrganizationUserProfileUpdate([FromBody] OrganizationRequest request)
         {

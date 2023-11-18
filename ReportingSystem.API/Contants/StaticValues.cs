@@ -10,6 +10,7 @@
         public const string LoginUserRegisterPath = "user/register";
         public const string OrganizationUserRegisterPath = "user/orgregister";
         public const string OrganizationUserUpdatePath = "user/updateprofile";
+        public const string OrganizationUsershowHeader = "user/showHeader";
         public const string OrganizationChangePasswordPath = "user/changePassword";
         public const string OrganizationUserEmailSendPath = "user/sendEmail";
         public const string LoginUserChangePasswordPath = "user/change/password";

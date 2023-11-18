@@ -12,6 +12,7 @@ namespace ReportingSystem.API.Models
         public string State { get; set; }
         public string City { get; set; }
         public int PinCode { get; set; }
+        public bool ShowHeader { get; set; }
         public string LogoFileName { get; set; }
     }
 }

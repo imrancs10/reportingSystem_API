@@ -268,6 +268,40 @@ namespace ReportingSystem.API.Services
             return res;
         }
 
+        public async Task<OrganizationResponse> OrganizationUserShowHeader(OrganizationRequest request)
+        {
+            int? userId = request.OrganizationId;
+            if (userId != null)
+            {
+                //var org = _mapper.Map<Organization>(request);
+                var orgDetail = _context.Organizations.FirstOrDefault(x => x.Id == userId);
+                if (orgDetail != null)
+                {
+                    orgDetail.ShowHeader = request.ShowHeader;
+                    var entity = _context.Organizations.Update(orgDetail);
+                    entity.State = EntityState.Modified;
+                    await _context.SaveChangesAsync();
+                    var savdData = entity.Entity;
+                    var res = _mapper.Map<OrganizationResponse>(savdData);
+                    return res;
+                }
+                else
+                {
+                    var orgDetail1 = _context.Organizations.FirstOrDefault(x => x.Email == request.Email);
+                    if (orgDetail1 != null)
+                    {
+                        orgDetail1.ShowHeader = request.ShowHeader;
+                        var entity = _context.Organizations.Update(orgDetail1);
+                        entity.State = EntityState.Modified;
+                        await _context.SaveChangesAsync();
+                        var savdData = entity.Entity;
+                        var res = _mapper.Map<OrganizationResponse>(savdData);
+                        return res;
+                    }
+                }
+            }
+            return null;
+        }
         public async Task<OrganizationResponse> OrganizationUserProfileUpdate(OrganizationRequest request)
         {
             int? userId = null;
