@@ -14,6 +14,7 @@ namespace ReportingSystem.API.DTO.Request
         public string City { get; set; }
         public int PinCode { get; set; }
         public string Password { get; set; }
+        public bool ShowHeader { get; set; }
         public string LogoFileName { get; set; }
     }
 }

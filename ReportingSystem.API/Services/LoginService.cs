@@ -107,7 +107,8 @@ namespace ReportingSystem.API.Services
                               Name = org.Name,
                               Password = user.Password,
                               PinCode = org.PinCode,
-                              State = org.State
+                              State = org.State,
+                              ShowHeader = org.ShowHeader
                           }).ToList();
 
             //var res = _mapper.Map<List<OrganizationResponse>>(result);
