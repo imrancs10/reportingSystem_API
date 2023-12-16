@@ -185,8 +185,8 @@ namespace ReportingSystem.API.Controllers
 	                            text-align: left;
                             }
                             footer{
-	                            float: left;
-	                            text-align: left;
+	                            float: right;
+	                            text-align: right;
                             }
                             </style>
                         </head>");
@@ -216,6 +216,22 @@ namespace ReportingSystem.API.Controllers
                                         <td>
                                         </td>
                                         <td>
+                                            Date
+                                        </td>
+                                        <td>
+                                            <b> {5}</b>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>
+                                            Age
+                                        </td>
+                                        <td>
+                                            <b>{4} </b>
+                                        </td>
+                                        <td>
+                                        </td>
+                                        <td>
                                             Gender/Sex
                                         </td>
                                         <td>
@@ -227,37 +243,21 @@ namespace ReportingSystem.API.Controllers
                                             UHID/Patient ID
                                         </td>
                                         <td>
-                                            <b>{2} </b>
+                                            <b>{2}</b>
                                         </td>
                                         <td>
                                         </td>
                                         <td>
-                                            Reff By
+                                            Ref. by
                                         </td>
                                         <td>
-                                            <b> {3}</b>
-                                        </td>
-                                    </tr>
-                                    <tr>
-                                        <td>
-                                            Age
-                                        </td>
-                                        <td>
-                                            <b>{4}</b>
-                                        </td>
-                                        <td>
-                                        </td>
-                                        <td>
-                                            Date
-                                        </td>
-                                        <td>
-                                            <b>{5}</b>
+                                            <b>{3}</b>
                                         </td>
                                     </tr>
                                 </table>", patientData.FullName, patientData.gender, patientData.uhid, patientData.refby, patientData.age, patientData.date.Value.ToLongDateString());
             sb.AppendFormat(@"<br>
                               <div id='results'>
-                                 <p style='margin-bottom: 2px;text-align: center;font-size:18px !important; font-style:bold !important'>Investigation Report</p>
+                                 <p style='margin-bottom: 2px;text-align: center;font-size:18px !important; font-style:bold !important'>Investigation Report X-chest PA View</p>
                                  <hr>
                                 <p style='padding: 5px; text-decoration: underline;'><b>Lung Field:</b></p>");
 
@@ -285,7 +285,7 @@ namespace ReportingSystem.API.Controllers
             if (patientData.hilumSide == "Normal")
                 sb.AppendFormat(@" <p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; The hilum in {0} lung appears {1}.</p>", patientData.hilumSide, patientData.hilum);
             else
-                sb.AppendFormat(@"<p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; The hilum in <b>{0}</b> lung shows <b>{1} {2}</b>.</p>", patientData.hilumSide, patientData.hilum, patientData.ProminentHilumSpecify);
+                sb.AppendFormat(@"<p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; The hilum in <b>{0}</b> lung appears <b>{1} {2}</b>.</p>", patientData.hilumSide, patientData.hilum, patientData.ProminentHilumSpecify);
 
             sb.AppendFormat(@"<p style='padding: 5px; text-decoration: underline;'><b>Mediastinum Info:</b></p>");
 
@@ -316,7 +316,7 @@ namespace ReportingSystem.API.Controllers
             else if (patientData.CardiacShape == "Abnormal")
                 sb.AppendFormat(@"<p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; The Cardiac Shape is {0}</p>", patientData.CardiacShapeAbnormal);
             else
-                sb.AppendFormat(@"<p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; The Cardiac Shape is {0}</p>", patientData.CardiacShape);
+                sb.AppendFormat(@"<p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; The Cardiac Size & Shape are {0}</p>", patientData.CardiacShape);
 
             if (patientData.AorticKnuckle == "Nil")
                 sb.AppendFormat(@"");
@@ -334,7 +334,7 @@ namespace ReportingSystem.API.Controllers
                 sb.AppendFormat(@"<p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; The Aortic Knuckle Unfolding of Aorta is {0}</p>", patientData.AorticKnuckleUnfoldingofAorta);
 
             sb.AppendFormat(@"<p style='padding: 5px;text-decoration: underline;'><b>Pleura Infomation:</b></p>");
-            sb.AppendFormat(@"<p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; The Costophrenic Angles in <b>{0}</b> lung is <b>{1}</b>. </p>", patientData.CostophrenicAnglesSide, patientData.CostophrenicAngles);
+            sb.AppendFormat(@"<p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; The Costophrenic Angles is <b>{1}</b>. </p>", patientData.CostophrenicAnglesSide, patientData.CostophrenicAngles);
 
             if (patientData.Pneumothorax == "Nil")
                 sb.AppendFormat(@"");
@@ -364,7 +364,7 @@ namespace ReportingSystem.API.Controllers
             if (patientData.HemiDiaphragm == "Normal")
                 sb.AppendFormat(@"<p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;The Hemi Diaphragm in {0} side appears {1}.</p>", patientData.HemiDiaphragmSide, patientData.HemiDiaphragm);
             else
-                sb.AppendFormat(@"<p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;The Hemi Diaphragm in <b>{0}</b> side shows <b>{1}</b>.</p>", patientData.HemiDiaphragmSide, patientData.HemiDiaphragmAbormal);
+                sb.AppendFormat(@"<p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;The Hemi Diaphragm in <b>{0}</b> side appears <b>{1}</b>.</p>", patientData.HemiDiaphragmSide, patientData.HemiDiaphragmAbormal);
 
             if (patientData.BreastShadow == "Nil")
                 sb.AppendFormat(@"");
@@ -391,22 +391,16 @@ namespace ReportingSystem.API.Controllers
             sb.AppendFormat(@"<p> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Costophrenic Angles in <b>{0}</b> lung is <b>{1}</b> and Hemi Diaphragm in {2} side appears {3} </p>", patientData.CostophrenicAnglesSide, patientData.CostophrenicAngles, patientData.HemiDiaphragmSide, patientData.HemiDiaphragm);
 
             sb.Append(@"<br>
-                        <p><b>Please correlate clinically</b></p>
+                        <p style='text-align: center'><b>Please correlate clinically</b></p><br>
                         <footer class='footer'>
                             <p>Doctor's Name</p>
                             <p>Signature / Date</p>
                         </footer>
-
                       </div>
-                    </div><br><hr> <table style='margin: 10px, 10px; width: 100%;'>
+                    </div><br><br><br><hr> <table style='margin: 10px, 10px; width: 100%;'>                    
                     <tr>
-                        <td colspan='2' style='margin-bottom: 2px;text-align: right;'>
-                            Authorised Signatory
-                        </td>
-                    </tr>
-                    <tr>
-                        <td colspan='2' style='margin-bottom: 2px;text-align: right;'>
-                           This Report to be matched clinically, This is not for madico legel perpose 
+                        <td colspan='2' style='margin-bottom: 2px;text-align: center;'>
+                           This Report to be matched clinically, This is not for madico legal and purpose 
                         </td>
                     </tr>
                 </table>");
