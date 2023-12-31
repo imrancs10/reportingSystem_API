@@ -59,7 +59,7 @@ namespace ReportingSystem.API.Utility
                                                     {
                                                         new Claim("role",role)
                                                     },
-                                                    expires: DateTime.Now.AddMinutes(6),
+                                                    expires: DateTime.Now.AddMinutes(20),
                                                     signingCredentials: signinCredentials);
 
             var tokenString = new JwtSecurityTokenHandler().WriteToken(tokeOptions);
