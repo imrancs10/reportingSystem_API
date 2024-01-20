@@ -47,6 +47,7 @@ namespace ReportingSystem.API.DTO.Request
         //public string trachea { get; set; }
         //public string uhid { get; set; }
 
+        public int? OrganizationId { get; set; }
         //Patient Information
         public string? FullName { get; set; }
         public string? uhid { get; set; }

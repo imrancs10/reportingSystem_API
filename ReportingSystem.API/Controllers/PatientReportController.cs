@@ -43,6 +43,15 @@ namespace ReportingSystem.API.Controllers
         {
             return await _patientReportService.GetPatientReport();
         }
+
+        [HttpGet]
+        [Route("get/orgPatientReport")]
+        public async Task<List<PatientReportResponse>> GetOrgPatientReport()
+        {
+            var orgId = Convert.ToInt32(Request.Headers["userId"].ToString());
+            return await _patientReportService.GetOrgPatientReport(orgId);
+        }
+
         //[HttpGet]
         //[Route("get/dashboardCount")]
         //public async Task<DashboardResponse> GetDashboardCount()
@@ -59,7 +68,8 @@ namespace ReportingSystem.API.Controllers
         [Route("add/ReportingSystem")]
         public async Task<IActionResult> AddPatientReport([FromBody] PatientReportRequest request)
         {
-
+            var orgId = Convert.ToInt32(Request.Headers["userId"].ToString());
+            request.OrganizationId = orgId;
             string orgName = !string.IsNullOrEmpty(request.orgName) && request.orgName.Length >= 4 ? request.orgName.Substring(0, 4).ToUpper() : "";
             var nameList = request.FullName.Split(" ");
             string name = nameList.Length >= 2 ? nameList[0].ToCharArray()[0].ToString().ToUpper() + nameList[1].ToCharArray()[0].ToString().ToUpper() : nameList[0].ToCharArray()[0].ToString().ToUpper() + nameList[0].ToCharArray()[1].ToString().ToUpper();

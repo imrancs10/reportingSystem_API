@@ -4,6 +4,7 @@ namespace ReportingSystem.API.Models
 {
     public class PatientReport : BaseModel
     {
+        public int? OrganizationId { get; set; }
         //Patient Information
         public string? FullName { get; set; }
         public string? uhid { get; set; }

@@ -40,7 +40,7 @@ namespace ReportingSystem.API.Services
         {
             PatientReport masterData = _mapper.Map<PatientReport>(request);
             masterData.XRayFileName = request.XRayReportFileName;
-            
+
 
             var entity = _context.PatientReports.Add(masterData);
             entity.State = EntityState.Added;
@@ -53,6 +53,14 @@ namespace ReportingSystem.API.Services
             var res = _mapper.Map<List<PatientReportResponse>>(result);
             return res;
         }
+
+        public async Task<List<PatientReportResponse>> GetOrgPatientReport(int orgId)
+        {
+            var result = await _context.PatientReports.Where(x => !x.IsDeleted && x.OrganizationId == orgId).OrderByDescending(x => x.UpdatedAt).ToListAsync();
+            var res = _mapper.Map<List<PatientReportResponse>>(result);
+            return res;
+        }
+
         public async Task<PatientReport> GetPatientLatestReport()
         {
             return _context.PatientReports.OrderByDescending(x => x.Id).FirstOrDefault();

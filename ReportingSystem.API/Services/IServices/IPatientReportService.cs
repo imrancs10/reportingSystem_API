@@ -10,6 +10,7 @@ namespace ReportingSystem.API.Services.IServices
     public interface IPatientReportService
     {
         Task<List<PatientReportResponse>> GetPatientReport();
+        Task<List<PatientReportResponse>> GetOrgPatientReport(int orgId);
         Task<PatientReportResponse> AddPatientReport(PatientReportRequest request);
         Task<PatientReport> GetPatientLatestReport();
     }
