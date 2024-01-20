@@ -15,6 +15,7 @@ namespace ReportingSystem.API.DTO.Response
         public DateTime DeletedAt { get; set; }
         public bool IsDeleted { get; set; }
         public string? FullName { get; set; }
+        public string? UniqueId { get; set; }
         public string? uhid { get; set; }
         public string? refby { get; set; }
         public string? gender { get; set; }
