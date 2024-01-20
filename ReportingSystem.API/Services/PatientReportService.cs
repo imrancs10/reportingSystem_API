@@ -40,21 +40,7 @@ namespace ReportingSystem.API.Services
         {
             PatientReport masterData = _mapper.Map<PatientReport>(request);
             masterData.XRayFileName = request.XRayReportFileName;
-            string orgName = !string.IsNullOrEmpty(request.orgName) && request.orgName.Length >= 4 ? request.orgName.Substring(0, 4).ToUpper() : "";
-            var nameList = request.FullName.Split(" ");
-            string name = nameList.Length >= 2 ? nameList[0].ToCharArray()[0].ToString().ToUpper() + nameList[1].ToCharArray()[0].ToString().ToUpper() : nameList[0].ToCharArray()[0].ToString().ToUpper() + nameList[0].ToCharArray()[1].ToString().ToUpper();
-            string padNo = "1";
-            var maxIdReport = _context.PatientReports.OrderByDescending(x => x.Id).FirstOrDefault();
-            if (maxIdReport != null)
-            {
-                var uniqueId = maxIdReport.UniqueId;
-                if (!string.IsNullOrEmpty(uniqueId))
-                {
-                    padNo = (Convert.ToInt32(uniqueId.Substring(uniqueId.Length - 4, 4)) + 1).ToString();
-                }
-            }
-
-            masterData.UniqueId = orgName + Convert.ToString(DateTime.Now.Year) + name + padNo.PadLeft(4, '0');
+            
 
             var entity = _context.PatientReports.Add(masterData);
             entity.State = EntityState.Added;
@@ -66,6 +52,10 @@ namespace ReportingSystem.API.Services
             var result = await _context.PatientReports.Where(x => !x.IsDeleted).OrderByDescending(x => x.UpdatedAt).ToListAsync();
             var res = _mapper.Map<List<PatientReportResponse>>(result);
             return res;
+        }
+        public async Task<PatientReport> GetPatientLatestReport()
+        {
+            return _context.PatientReports.OrderByDescending(x => x.Id).FirstOrDefault();
         }
         #endregion
     }

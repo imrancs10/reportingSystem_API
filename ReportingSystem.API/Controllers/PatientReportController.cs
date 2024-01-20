@@ -59,27 +59,44 @@ namespace ReportingSystem.API.Controllers
         [Route("add/ReportingSystem")]
         public async Task<IActionResult> AddPatientReport([FromBody] PatientReportRequest request)
         {
+
+            string orgName = !string.IsNullOrEmpty(request.orgName) && request.orgName.Length >= 4 ? request.orgName.Substring(0, 4).ToUpper() : "";
+            var nameList = request.FullName.Split(" ");
+            string name = nameList.Length >= 2 ? nameList[0].ToCharArray()[0].ToString().ToUpper() + nameList[1].ToCharArray()[0].ToString().ToUpper() : nameList[0].ToCharArray()[0].ToString().ToUpper() + nameList[0].ToCharArray()[1].ToString().ToUpper();
+            string padNo = "1";
+            var maxIdReport = await _patientReportService.GetPatientLatestReport();
+            if (maxIdReport != null)
+            {
+                var uniqueId = maxIdReport.UniqueId;
+                if (!string.IsNullOrEmpty(uniqueId))
+                {
+                    padNo = (Convert.ToInt32(uniqueId.Substring(uniqueId.Length - 4, 4)) + 1).ToString();
+                }
+            }
+
+            request.UniqueId = orgName + Convert.ToString(DateTime.Now.Year) + name + padNo.PadLeft(4, '0');
+
             if (request.XRayReportBase64.Contains(","))
             {
                 var basePath = System.IO.Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", "XRayReport");
                 if (!Directory.Exists(basePath))
                     Directory.CreateDirectory(basePath);
 
-                var filePathName = System.IO.Path.Combine(basePath, request.uhid + System.IO.Path.GetExtension(request.XRayReportFileName));
-                var jpegFilePathName = System.IO.Path.Combine(basePath, request.uhid + ".JPEG");
+                var filePathName = System.IO.Path.Combine(basePath, request.UniqueId + System.IO.Path.GetExtension(request.XRayReportFileName));
+                var jpegFilePathName = System.IO.Path.Combine(basePath, request.UniqueId + ".JPEG");
 
                 var FileAsBase64 = request.XRayReportBase64.Substring(request.XRayReportBase64.IndexOf(",") + 1);
                 var FileAsByteArray = Convert.FromBase64String(FileAsBase64);
                 // If file found, delete it
-                if (System.IO.File.Exists(System.IO.Path.Combine(basePath, request.uhid + System.IO.Path.GetExtension(request.XRayReportFileName))))
-                    System.IO.File.Delete(System.IO.Path.Combine(basePath, request.uhid + System.IO.Path.GetExtension(request.XRayReportFileName)));
+                if (System.IO.File.Exists(System.IO.Path.Combine(basePath, request.UniqueId + System.IO.Path.GetExtension(request.XRayReportFileName))))
+                    System.IO.File.Delete(System.IO.Path.Combine(basePath, request.UniqueId + System.IO.Path.GetExtension(request.XRayReportFileName)));
 
                 using (var fs = new FileStream(filePathName, FileMode.CreateNew))
                 {
                     fs.Write(FileAsByteArray, 0, FileAsByteArray.Length);
                 }
 
-                request.XRayReportFileName = request.uhid + System.IO.Path.GetExtension(request.XRayReportFileName);
+                request.XRayReportFileName = request.UniqueId + System.IO.Path.GetExtension(request.XRayReportFileName);
 
                 if (System.IO.Path.GetExtension(request.XRayReportFileName).ToLower().Contains("dcm")
                         || System.IO.Path.GetExtension(request.XRayReportFileName).ToLower().Contains("jpg"))
@@ -94,7 +111,7 @@ namespace ReportingSystem.API.Controllers
                         image.Save(jpegFilePathName, exportOptions);
                     }
                     System.IO.File.Delete(filePathName);
-                    request.XRayReportFileName = request.uhid + ".JPEG";
+                    request.XRayReportFileName = request.UniqueId + ".JPEG";
                     //}
                 }
             }

@@ -11,5 +11,6 @@ namespace ReportingSystem.API.Services.IServices
     {
         Task<List<PatientReportResponse>> GetPatientReport();
         Task<PatientReportResponse> AddPatientReport(PatientReportRequest request);
+        Task<PatientReport> GetPatientLatestReport();
     }
 }
