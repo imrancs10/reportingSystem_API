@@ -7,6 +7,7 @@ namespace ReportingSystem.API.Models
         //Patient Information
         public string? FullName { get; set; }
         public string? uhid { get; set; }
+        public string? UniqueId { get; set; }
         public string? refby { get; set; }
         public string? gender { get; set; }
         public string? age { get; set; }
