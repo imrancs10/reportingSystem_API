@@ -33,7 +33,7 @@ namespace ReportingSystem.API.Middleware
                 options => { options.UseSqlServer(DefaultConnection); }
             );
             var serviceProvider = services.BuildServiceProvider();
-            //ApplyMigrations(serviceProvider);
+            ApplyMigrations(serviceProvider);
             return services;
         }
 
@@ -41,7 +41,7 @@ namespace ReportingSystem.API.Middleware
         public static void ApplyMigrations(this IServiceProvider serviceProvider)
         {
             var db = serviceProvider.GetRequiredService<ReportingSystemContext>();
-            //db.Database.Migrate();
+            db.Database.Migrate();
         }
     }
 }
